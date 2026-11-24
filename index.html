@@ -3,137 +3,169 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Save The Dog 3.0</title>
 <style>
 *{box-sizing:border-box}
+:root{--gold:#ffbd55;--orange:#ff702e;--blue:#62baff;--dark:#080d18}
 body{margin:0;background:#080d18;color:white;font-family:Arial,sans-serif;overflow:hidden}
-button{border:0;border-radius:12px;padding:13px 17px;font-weight:bold;color:white;background:linear-gradient(135deg,#ff9d27,#e64b20);cursor:pointer}
+button{font:inherit;color:white;border:1px solid #ffffff30;border-radius:13px;padding:13px 17px;background:linear-gradient(135deg,#ffad40,#ec542b);font-weight:900;cursor:pointer;box-shadow:0 5px 18px #0008;transition:.2s}
 button:active{transform:scale(.96)}
-#game{width:100vw;height:100dvh;position:relative;overflow:hidden;background:#101a2b}
-canvas{width:100%;height:100%;display:block}
-.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#07101deF,#101d31ed);padding:18px;overflow:auto}
-.box{width:min(440px,100%);max-height:94%;overflow:auto;text-align:center;padding:24px 20px;border:1px solid #ffffff30;border-radius:22px;background:#101b2beF;box-shadow:0 15px 60px #000b}
-h1{font-size:clamp(32px,9vw,48px);margin:5px 0;color:#ffb13b;text-shadow:0 4px 20px #ff6a2466}
-h2{color:#ffc15a}
-p{color:#cbd6e8;line-height:1.45}
-.row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:12px 0}
-.row button{flex:1;min-width:110px}
-.small{font-size:12px;color:#aabbd1}
-.card{background:#ffffff0d;border:1px solid #ffffff20;padding:12px;border-radius:13px;margin:9px 0;text-align:left}
-.card button{float:right;padding:9px 12px}
-#hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:7px;pointer-events:none}
-.huditem{background:#07101dcc;padding:9px 12px;border-radius:11px;font-size:13px;border:1px solid #ffffff25}
-#reaction{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);width:min(290px,75vw);font-size:22px;padding:18px;background:linear-gradient(135deg,#ffbd39,#ed432b);box-shadow:0 0 30px #ff7a3970}
-#reaction:active{transform:translateX(-50%) scale(.95)}
-#pause{position:absolute;right:12px;bottom:24px;background:#182d49}
-#notice{position:absolute;top:75px;left:50%;transform:translateX(-50%);width:90%;text-align:center;font-size:17px;font-weight:bold;text-shadow:0 3px 8px black;pointer-events:none}
+button.secondary{background:linear-gradient(135deg,#243b59,#111e32)}
+button:disabled{opacity:.5}
+#app{position:relative;width:100vw;height:100dvh;overflow:hidden;background:#091322}
+#scene{position:absolute;inset:0;width:100%;height:100%}
+#menu{position:absolute;inset:0;overflow:auto;background:linear-gradient(90deg,#050b16ed 0%,#07101a88 53%,#08132155 100%)}
+.menu-bg{position:absolute;inset:0;overflow:hidden;background:linear-gradient(#101e38,#253b50 55%,#111722)}
+.menu-bg:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07101a55 0%,transparent 45%,#020711 100%),radial-gradient(ellipse at 72% 50%,#ff9c4140,transparent 40%)}
+.menu-city{position:absolute;bottom:22%;left:0;right:0;height:40%;display:flex;align-items:end;gap:5px;opacity:.9}
+.building{flex:1;background:linear-gradient(90deg,#111d31,#28354b,#101a2b);height:var(--h);position:relative;box-shadow:inset 5px 0 12px #ffffff0b}
+.building:after{content:"";position:absolute;inset:12px;background:repeating-linear-gradient(90deg,transparent 0 13px,#ffc66b88 14px 18px,transparent 19px 29px),repeating-linear-gradient(0deg,transparent 0 20px,#ffc66b55 21px 25px,transparent 26px 39px);opacity:.5}
+.menu-road{position:absolute;bottom:0;height:27%;width:100%;background:linear-gradient(#333b46,#080c14);clip-path:polygon(28% 0,72% 0,100% 100%,0 100%)}
+.menu-road:after{content:"";position:absolute;left:49%;height:100%;width:5px;background:repeating-linear-gradient(0deg,#f4d28b 0 28px,transparent 29px 55px);transform:perspective(100px) rotateX(25deg)}
+.menu-glow{position:absolute;bottom:20%;right:12%;width:38%;height:20%;background:#ff9a3c44;filter:blur(55px)}
+.menu-content{position:relative;z-index:2;min-height:100%;padding:24px 20px 25px;display:flex;flex-direction:column;justify-content:space-between}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{padding:9px 12px;border-radius:30px;background:#071321bb;border:1px solid #ffffff2b;font-size:12px;font-weight:bold;backdrop-filter:blur(12px)}
+.hero{margin-top:7vh;max-width:580px}
+.kicker{letter-spacing:5px;color:#ffbd55;font-size:11px;font-weight:bold}
+.logo{font-size:clamp(43px,10vw,76px);line-height:.88;font-weight:1000;letter-spacing:-3px;text-shadow:0 5px 0 #71351f,0 12px 35px #000b}
+.logo span{color:#ffb64e}
+.subtitle{color:#d3e2f4;letter-spacing:3px;font-size:11px;margin-top:14px}
+.hero p{max-width:360px;color:#d2deec;line-height:1.5;font-size:14px}
+.main-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.play{font-size:19px;padding:17px 30px;min-width:190px;letter-spacing:1px}
+.menu-bottom{display:flex;gap:9px;flex-wrap:wrap;max-width:620px;margin-top:35px}
+.menu-bottom button{flex:1;min-width:95px;font-size:12px}
+.car-art{position:absolute;z-index:1;right:-7%;bottom:18%;width:min(65vw,570px);height:190px;filter:drop-shadow(0 25px 22px #000b);animation:carFloat 4s ease-in-out infinite}
+@keyframes carFloat{50%{transform:translateY(-5px)}}
+.carbody{position:absolute;bottom:26px;left:0;width:100%;height:100px;background:linear-gradient(160deg,#56aaff,#1260ba 48%,#073b85);clip-path:polygon(5% 44%,17% 28%,30% 5%,65% 5%,81% 32%,97% 45%,100% 80%,0 80%);border-radius:25px}
+.carwindow{position:absolute;bottom:100px;left:27%;width:47%;height:47px;background:linear-gradient(135deg,#c9e9ff,#1d3e65);clip-path:polygon(16% 0,80% 0,100% 100%,0 100%)}
+.wheel{position:absolute;bottom:7px;width:55px;height:55px;background:radial-gradient(circle,#aeb8c2 0 18%,#171b24 20% 55%,#05070c 57%);border:4px solid #090e18;border-radius:50%;animation:spin 3s linear infinite}
+.wheel.one{left:17%}.wheel.two{right:16%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.menu-dog{position:absolute;right:40%;bottom:22%;font-size:clamp(70px,15vw,130px);z-index:2;filter:drop-shadow(0 12px 15px #000b);animation:dogBob 2.5s ease-in-out infinite}
+@keyframes dogBob{50%{transform:translateY(-10px)}}
+.rain-overlay{position:absolute;inset:0;pointer-events:none;opacity:.3;background:repeating-linear-gradient(105deg,transparent 0 22px,#d7eaff55 23px 24px,transparent 25px 45px);animation:rain 1s linear infinite}
+@keyframes rain{to{background-position:0 100px}}
+.panel{position:absolute;inset:0;z-index:10;background:#060d19ed;backdrop-filter:blur(15px);display:flex;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.box{width:min(460px,100%);max-height:94%;overflow:auto;background:linear-gradient(145deg,#17273d,#0a1423);border:1px solid #ffffff27;border-radius:22px;padding:22px;box-shadow:0 25px 70px #000b}
+.box h2{color:var(--gold);margin-top:0}
+.card{background:#ffffff0c;border:1px solid #ffffff1b;border-radius:13px;padding:13px;margin:9px 0;text-align:left;line-height:1.5}
+.card button{float:right;padding:8px 11px;font-size:11px}
+.clear{clear:both}
 .hidden{display:none!important}
-.progress{height:9px;background:#ffffff20;border-radius:20px;overflow:hidden;margin:10px 0}
-.progress div{height:100%;width:0;background:#ffb33e}
+#hud{position:absolute;z-index:5;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:6px;pointer-events:none}
+.hud{padding:9px 11px;border:1px solid #ffffff35;border-radius:11px;background:#071321dc;font-size:12px;font-weight:bold;backdrop-filter:blur(10px)}
+#reaction{position:absolute;z-index:6;bottom:25px;left:50%;transform:translateX(-50%);width:min(300px,76vw);font-size:21px;padding:18px;box-shadow:0 0 30px #ff8b3488;animation:pulse 1s infinite}
+@keyframes pulse{50%{filter:brightness(1.3);box-shadow:0 0 45px #ff8b34}}
+#pause{position:absolute;z-index:6;bottom:25px;right:12px}
+#notice{position:absolute;z-index:6;top:75px;left:5%;width:90%;text-align:center;font-weight:900;font-size:17px;text-shadow:0 3px 8px #000}
+.progress{height:8px;background:#ffffff20;border-radius:20px;overflow:hidden;margin:8px 0}
+.progress div{height:100%;background:linear-gradient(90deg,#ff6d35,#ffd16d)}
+#flash{position:absolute;inset:0;z-index:8;background:white;opacity:0;pointer-events:none}
+@media(max-height:650px){.hero{margin-top:2vh}.menu-dog{bottom:18%}.car-art{bottom:14%;transform:scale(.8);transform-origin:right bottom}.menu-bottom{margin-top:15px}}
 </style>
 </head>
 <body>
-<div id="game">
+<div id="app">
 <canvas id="scene"></canvas>
+<div id="flash"></div>
+
+<div id="menu">
+ <div class="menu-bg">
+  <div class="menu-city">
+   <div class="building" style="--h:65%"></div><div class="building" style="--h:90%"></div>
+   <div class="building" style="--h:55%"></div><div class="building" style="--h:100%"></div>
+   <div class="building" style="--h:72%"></div><div class="building" style="--h:88%"></div>
+   <div class="building" style="--h:52%"></div><div class="building" style="--h:75%"></div>
+  </div>
+  <div class="menu-glow"></div><div class="menu-road"></div>
+  <div class="car-art"><div class="carbody"></div><div class="carwindow"></div><div class="wheel one"></div><div class="wheel two"></div></div>
+  <div class="menu-dog">🐕</div><div class="rain-overlay"></div>
+ </div>
+ <div class="menu-content">
+  <div class="topbar">
+   <div class="pill">🎮 CINEMATIC EDITION</div>
+   <div class="pill">🪙 <span id="menuCoins">0</span> &nbsp; 🏆 <span id="menuBest">0</span></div>
+  </div>
+  <div class="hero">
+   <div class="kicker">UN'AVVENTURA CONTRO IL TEMPO</div>
+   <div class="logo">SAVE<br><span>THE DOG</span></div>
+   <div class="subtitle">FRANCESCO EDITION · 3.0</div>
+   <p>Una piccola vita. Una Renault Clio in arrivo. Un solo obiettivo: salvare il cane!</p>
+   <div class="main-buttons">
+    <button class="play" onclick="startGame()">▶ GIOCA ORA</button>
+    <button class="secondary" onclick="toggleSound()">♫ AUDIO <span id="soundLabel">ON</span></button>
+   </div>
+  </div>
+  <div class="menu-bottom">
+   <button class="secondary" onclick="openPanel('shop')">🛒 NEGOZIO</button>
+   <button class="secondary" onclick="openPanel('missions')">🎯 MISSIONI</button>
+   <button class="secondary" onclick="openPanel('maps')">🌍 MAPPE</button>
+   <button class="secondary" onclick="openPanel('records')">🏆 RECORD</button>
+  </div>
+ </div>
+</div>
 
 <div id="hud" class="hidden">
- <div class="huditem">⭐ <span id="score">0</span></div>
- <div class="huditem">🪙 <span id="coins">0</span></div>
- <div class="huditem">🏆 <span id="best">0</span></div>
- <div class="huditem">❤️ <span id="lives">3</span></div>
+ <div class="hud">⭐ <span id="score">0</span></div>
+ <div class="hud">🪙 <span id="coins">0</span></div>
+ <div class="hud">🏆 <span id="best">0</span></div>
+ <div class="hud">❤️ <span id="lives">3</span></div>
 </div>
 <div id="notice"></div>
-<button id="reaction" class="hidden">🐶 SALVA IL CANE!</button>
-<button id="pause" class="hidden">Ⅱ</button>
-
-<div id="menu" class="panel">
- <div class="box">
-  <div style="font-size:55px">🐶 🚗</div>
-  <h1>SAVE THE DOG</h1>
-  <div style="color:#ffb13b;font-weight:bold;letter-spacing:4px">CINEMATIC EDITION 3.0</div>
-  <p>Una corsa contro il tempo. Salva il cane prima che arrivi la Clio!</p>
-  <div class="row">
-   <button onclick="startGame()">▶ GIOCA</button>
-   <button onclick="openPanel('shop')">🛒 NEGOZIO</button>
-  </div>
-  <div class="row">
-   <button onclick="openPanel('missions')">🎯 MISSIONI</button>
-   <button onclick="openPanel('records')">🏆 RECORD</button>
-  </div>
-  <div class="row">
-   <button onclick="openPanel('maps')">🌍 MAPPE</button>
-   <button onclick="toggleSound()">🔊 AUDIO <span id="audioLabel">ON</span></button>
-  </div>
-  <p class="small">Regola speciale: il padre di Francesco compare con il 35% di probabilità dopo un incidente!</p>
- </div>
-</div>
+<button id="reaction" class="hidden" onclick="saveDog()">🐶 SALVA IL CANE!</button>
+<button id="pause" class="hidden" onclick="pauseGame()">Ⅱ</button>
 
 <div id="shop" class="panel hidden"><div class="box">
- <h2>🛒 NEGOZIO</h2><p>Le tue monete: 🪙 <span id="shopCoins">0</span></p>
- <div id="shopItems"></div>
- <button onclick="openPanel('menu')">INDIETRO</button>
+ <h2>🛒 NEGOZIO</h2><p>Monete: 🪙 <span id="shopCoins"></span></p><div id="shopItems"></div>
+ <button onclick="openPanel('menu')">← MENU</button>
 </div></div>
-
 <div id="missions" class="panel hidden"><div class="box">
- <h2>🎯 MISSIONI E OBIETTIVI</h2><div id="missionItems"></div>
- <button onclick="openPanel('menu')">INDIETRO</button>
+ <h2>🎯 MISSIONI</h2><div id="missionItems"></div>
+ <button onclick="openPanel('menu')">← MENU</button>
 </div></div>
-
-<div id="records" class="panel hidden"><div class="box">
- <h2>🏆 CLASSIFICA RECORD</h2><div id="recordItems"></div>
- <button onclick="openPanel('menu')">INDIETRO</button>
-</div></div>
-
 <div id="maps" class="panel hidden"><div class="box">
- <h2>🌍 SELEZIONA MAPPA</h2><div id="mapItems"></div>
- <button onclick="openPanel('menu')">INDIETRO</button>
+ <h2>🌍 MONDO DI GIOCO</h2><div id="mapItems"></div>
+ <button onclick="openPanel('menu')">← MENU</button>
 </div></div>
-
+<div id="records" class="panel hidden"><div class="box">
+ <h2>🏆 CLASSIFICA</h2><div id="recordItems"></div>
+ <button onclick="openPanel('menu')">← MENU</button>
+</div></div>
 <div id="pausePanel" class="panel hidden"><div class="box">
- <h2>⏸ PAUSA</h2><p>La Clio aspetterà... per ora.</p>
+ <h2>⏸ PAUSA</h2><p>La Clio può aspettare.</p>
  <button onclick="resumeGame()">RIPRENDI</button>
- <button onclick="goMenu()">MENU</button>
+ <button class="secondary" onclick="goMenu()">MENU</button>
 </div></div>
-
 <div id="result" class="panel hidden"><div class="box">
- <h2 id="resultTitle">PARTITA TERMINATA</h2>
- <p id="resultText"></p>
- <div class="row">
-  <button onclick="startGame()">RIGIOCA</button>
-  <button onclick="goMenu()">MENU</button>
- </div>
+ <h2 id="resultTitle">GAME OVER</h2><p id="resultText"></p>
+ <button onclick="startGame()">RIGIOCA</button>
+ <button class="secondary" onclick="goMenu()">MENU</button>
 </div></div>
 </div>
 
 <script>
-const canvas=document.getElementById("scene");
-const ctx=canvas.getContext("2d");
 const $=id=>document.getElementById(id);
-let W=900,H=600,scale=1;
-let state="menu",score=0,lives=3,round=0,coins=Number(localStorage.coins||0);
-let best=Number(localStorage.best||0),timer=0,deadline=0,carX=1000;
-let last=0,raf=0,paused=false,failed=false;
-let rain=false,lightning=0,traffic=[],particles=[],clouds=[];
-let sound=true,audioCtx=null,noticeTimer=0;
-let selectedMap=localStorage.map||"Città";
-let owned=JSON.parse(localStorage.owned||'["Cane classico"]');
+const canvas=$("scene"),ctx=canvas.getContext("2d");
+let W=innerWidth,H=innerHeight,dpr=1;
+let state="menu",paused=false,raf=0,last=0;
+let score=0,best=Number(localStorage.best||0),coins=Number(localStorage.coins||0),lives=3;
+let timer=0,deadline=0,carX=0,failed=false,round=0;
+let rain=false,storm=false,lightning=0,traffic=[],particles=[],police=false;
+let sound=true,audioCtx=null,selectedMap=localStorage.selectedMap||"Città";
 let dogSkin=localStorage.dogSkin||"Cane classico";
-let unlockedMaps=["Città"];
-let missions=[
- {name:"Primo salvataggio",desc:"Salva un cane almeno una volta",goal:1,key:"rescues",reward:30},
- {name:"Eroe dei cani",desc:"Salva 10 cani",goal:10,key:"rescues",reward:100},
- {name:"Collezionista",desc:"Accumula 200 monete",goal:200,key:"coinsEarned",reward:60},
- {name:"Senza paura",desc:"Completa 5 salvataggi consecutivi",goal:5,key:"streak",reward:80}
-];
+let owned=JSON.parse(localStorage.owned||'["Cane classico"]');
 let stats=JSON.parse(localStorage.stats||'{"rescues":0,"coinsEarned":0,"streak":0}');
 let completed=JSON.parse(localStorage.completed||"[]");
+let records=JSON.parse(localStorage.records||"[]");
 let maps=[
- {name:"Città",price:0,sky:"#172a45",road:"#30343d"},
- {name:"Notte",price:100,sky:"#090e2c",road:"#191d2a"},
- {name:"Temporale",price:150,sky:"#263448",road:"#252d39"},
- {name:"Campagna",price:200,sky:"#345b50",road:"#41433a"},
- {name:"Neon City",price:300,sky:"#241344",road:"#202034"}
+ {name:"Città",price:0,sky:"#263b59",road:"#343b48"},
+ {name:"Notte",price:100,sky:"#080e28",road:"#202333"},
+ {name:"Temporale",price:150,sky:"#263548",road:"#30333a"},
+ {name:"Campagna",price:200,sky:"#3b6956",road:"#42443b"},
+ {name:"Neon City",price:300,sky:"#271344",road:"#202039"}
 ];
 let shop=[
  {name:"Cane classico",price:0,emoji:"🐶"},
@@ -142,336 +174,363 @@ let shop=[
  {name:"Cane ninja",price:180,emoji:"🥷"},
  {name:"Cane leggendario",price:300,emoji:"🐺"}
 ];
-let mapData=()=>maps.find(m=>m.name===selectedMap)||maps[0];
+let missions=[
+ {name:"Primo salvataggio",desc:"Salva un cane",goal:1,key:"rescues",reward:30},
+ {name:"Eroe dei cani",desc:"Salva 10 cani",goal:10,key:"rescues",reward:100},
+ {name:"Collezionista",desc:"Guadagna 200 monete",goal:200,key:"coinsEarned",reward:60},
+ {name:"Senza paura",desc:"5 salvataggi consecutivi",goal:5,key:"streak",reward:80}
+];
 function resize(){
- const d=Math.min(devicePixelRatio||1,2);
- W=canvas.clientWidth;H=canvas.clientHeight;
- canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+ dpr=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;
+ canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
 }
-window.addEventListener("resize",resize);resize();
-
-function show(id){document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));if(id!=="none")$(id).classList.remove("hidden")}
-function openPanel(name){
- state="menu";$("hud").classList.add("hidden");$("reaction").classList.add("hidden");$("pause").classList.add("hidden");
- show(name==="menu"?"menu":name);
- if(name==="shop")renderShop();
- if(name==="missions")renderMissions();
- if(name==="records")renderRecords();
- if(name==="maps")renderMaps();
-}
+addEventListener("resize",resize);resize();
 function save(){
- localStorage.coins=coins;localStorage.best=best;
- localStorage.stats=JSON.stringify(stats);
- localStorage.completed=JSON.stringify(completed);
- localStorage.owned=JSON.stringify(owned);
- localStorage.dogSkin=dogSkin;localStorage.map=selectedMap;
-}
-function updateHUD(){
- $("score").textContent=score;$("coins").textContent=coins;
- $("best").textContent=best;$("lives").textContent=lives;
+ localStorage.coins=coins;localStorage.best=best;localStorage.stats=JSON.stringify(stats);
+ localStorage.completed=JSON.stringify(completed);localStorage.owned=JSON.stringify(owned);
+ localStorage.dogSkin=dogSkin;localStorage.selectedMap=selectedMap;
+ localStorage.records=JSON.stringify(records);
 }
 function audio(){
- if(!sound)return;
+ if(!sound)return null;
  try{
   audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
   if(audioCtx.state==="suspended")audioCtx.resume();
   return audioCtx;
- }catch(e){}
+ }catch(e){return null}
 }
-function beep(freq=440,duration=.12,type="sine",vol=.07){
+function beep(freq=440,dur=.12,type="sine",vol=.06){
  let a=audio();if(!a)return;
- let o=a.createOscillator(),g=a.createGain();
- o.type=type;o.frequency.value=freq;g.gain.value=vol;
- o.connect(g);g.connect(a.destination);o.start();
- g.gain.exponentialRampToValueAtTime(.001,a.currentTime+duration);
- o.stop(a.currentTime+duration);
+ let o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.value=freq;
+ g.gain.value=vol;o.connect(g);g.connect(a.destination);o.start();
+ g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);o.stop(a.currentTime+dur);
 }
-function toggleSound(){sound=!sound;$("audioLabel").textContent=sound?"ON":"OFF";if(sound)beep(600)}
-function say(t){
- $("notice").textContent=t;clearTimeout(noticeTimer);
- noticeTimer=setTimeout(()=>$("notice").textContent="",2500);
+function toggleSound(){
+ sound=!sound;$("soundLabel").textContent=sound?"ON":"OFF";if(sound)beep(650,.15);
+}
+function notice(t){$("notice").textContent=t;clearTimeout(notice.t);notice.t=setTimeout(()=>$("notice").textContent="",2800)}
+function updateHUD(){
+ $("score").textContent=score;$("coins").textContent=coins;$("best").textContent=best;
+ $("lives").textContent=lives;$("menuCoins").textContent=coins;$("menuBest").textContent=best;
+}
+function showPanel(id){
+ document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+ if(id!=="none")$(id).classList.remove("hidden");
+}
+function openPanel(id){
+ if(state==="playing"){cancelAnimationFrame(raf);state="menu"}
+ $("hud").classList.add("hidden");$("reaction").classList.add("hidden");$("pause").classList.add("hidden");
+ $("menu").classList.add("hidden");showPanel(id);
+ if(id==="menu"){$("menu").classList.remove("hidden");}
+ if(id==="shop")renderShop();if(id==="missions")renderMissions();
+ if(id==="maps")renderMaps();if(id==="records")renderRecords();
 }
 function startGame(){
- score=0;lives=3;round=0;failed=false;paused=false;rain=false;
- traffic=[];particles=[];state="playing";show("none");
- $("hud").classList.remove("hidden");$("reaction").classList.add("hidden");
- $("pause").classList.remove("hidden");updateHUD();
- nextRound();last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+ state="playing";paused=false;score=0;lives=3;round=0;failed=false;
+ traffic=[];particles=[];$("menu").classList.add("hidden");showPanel("none");
+ $("hud").classList.remove("hidden");$("pause").classList.remove("hidden");
+ updateHUD();nextRound();last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
 function nextRound(){
  if(state!=="playing")return;
- round++;failed=false;carX=W+250;
- timer=2.7+Math.random()*2.2;
- deadline=0;
+ round++;failed=false;deadline=0;timer=2.8+Math.random()*2.1;carX=W+180;
  $("reaction").classList.add("hidden");
- rain=selectedMap==="Temporale"||Math.random()<.16;
+ storm=selectedMap==="Temporale"||Math.random()<.12;
+ rain=storm||Math.random()<.18;police=false;
  traffic=[];
- if(Math.random()<.55)traffic.push({x:W+180,y:H*.68,speed:100+Math.random()*90,color:"#d5d9e1"});
- if(rain)say("🌧️ ATTENZIONE! STA ARRIVANDO IL TEMPORALE!");
- else if(round%4===0)say("🚨 La strada è pericolosa!");
- else say("🐶 Il cane è in pericolo!");
+ if(Math.random()<.55)traffic.push({x:W+200,speed:100+Math.random()*80,color:"#c5d5e5"});
+ if(Math.random()<.10){police=true;traffic.push({x:W+450,speed:170,color:"#222e45",police:true});notice("🚨 ATTENZIONE! POLIZIA IN STRADA!")}
+ else if(storm)notice("⛈️ TEMPORALE IN ARRIVO!");
+ else if(Math.random()<.07)notice("✨ EVENTO SEGRETO: PORTA FORTUNA!");
+ else notice("🐶 IL CANE È IN PERICOLO!");
+}
+function burst(x,y,color,n){
+ for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*320,vy:(Math.random()-.5)*300,life:.4+Math.random()*.7,color,size:2+Math.random()*5});
+}
+function flash(){
+ $("flash").style.opacity=".85";
+ setTimeout(()=>$("flash").style.opacity="0",100);
 }
 function saveDog(){
  if(state!=="playing"||deadline<=0||failed)return;
- failed=true;score++;stats.rescues++;stats.streak++;
+ failed=true;deadline=0;score++;stats.rescues++;stats.streak++;
  coins+=10;stats.coinsEarned+=10;
- if(score>best){best=score;localStorage.best=best}
- save();updateHUD();beep(880,.18);
- burst(W*.28,H*.68,"#ffdc70",20);
- say("🐶 SALVATAGGIO RIUSCITO! +10 MONETE");
+ if(score>best)best=score;
+ save();updateHUD();beep(900,.2);
+ burst(W*.30,H*.72,"#ffd66d",28);flash();
+ notice("🐶 SALVATAGGIO RIUSCITO! +10 MONETE");
  checkMissions();
- setTimeout(()=>{if(state==="playing")nextRound()},1000);
- deadline=0;
+ setTimeout(()=>{if(state==="playing")nextRound()},1100);
 }
 function fail(){
  if(state!=="playing"||failed)return;
  failed=true;deadline=0;lives--;stats.streak=0;
- $("reaction").classList.add("hidden");
- beep(90,.5,"sawtooth");
- burst(W*.3,H*.68,"#ff552f",30);
- // REGOLA FISSA: 35% ESATTO
+ $("reaction").classList.add("hidden");beep(85,.55,"sawtooth");
+ burst(W*.32,H*.72,"#ff592d",35);flash();
+ // PROBABILITA' ESATTA: 35%
  const fatherAppears=Math.random()<0.35;
  if(fatherAppears){
-  say("👨‍🦳 È ARRIVATO IL PADRE DI FRANCESCO!");
+  notice("👨‍🦳 È ARRIVATO IL PADRE DI FRANCESCO!");
   setTimeout(()=>{
    if(state!=="playing")return;
-   say("«FRANCESCO! IL PARAURTI LO PAGO IO! LICENZIATI!»");
-   beep(260,.4,"triangle");
-   endAccident("Il padre di Francesco ha pagato il paraurti! Francesco non deve offrire pizze.");
-  },1800);
+   notice("«IL PARAURTI LO PAGO IO! FRANCESCO, LICENZIATI!»");
+   beep(250,.4,"triangle");
+   finishAccident("Il padre di Francesco ha pagato il paraurti! Francesco non deve offrire pizze.");
+  },1900);
  }else{
-  say("💥 INCIDENTE! IL PARAURTI È DISTRUTTO!");
+  notice("💥 LA CLIO HA DISTRUTTO IL PARAURTI!");
   setTimeout(()=>{
    if(state!=="playing")return;
-   endAccident("Francesco deve offrire 10 PIZZE al proprietario della Clio per il paraurti!");
-  },1000);
+   finishAccident("Francesco deve offrire 10 PIZZE al proprietario della Clio!");
+  },1100);
  }
 }
-function endAccident(message){
+function finishAccident(message){
+ if(state!=="playing")return;
  if(lives<=0){
-  state="over";save();$("resultTitle").textContent="GAME OVER";
+  state="over";records.push(score);records.sort((a,b)=>b-a);records=records.slice(0,10);
+  save();$("resultTitle").textContent="GAME OVER";
   $("resultText").textContent=message+" Hai totalizzato "+score+" salvataggi.";
-  $("hud").classList.add("hidden");$("pause").classList.add("hidden");show("result");
+  $("hud").classList.add("hidden");$("pause").classList.add("hidden");showPanel("result");
  }else{
-  say(message);
-  setTimeout(()=>{if(state==="playing")nextRound()},2600);
+  notice(message);setTimeout(()=>{if(state==="playing")nextRound()},2800);
  }
 }
 function checkMissions(){
  missions.forEach((m,i)=>{
-  let value=stats[m.key]||0;
-  if(!completed.includes(i)&&value>=m.goal){
+  if(!completed.includes(i)&&(stats[m.key]||0)>=m.goal){
    completed.push(i);coins+=m.reward;stats.coinsEarned+=m.reward;
-   say("🏅 MISSIONE COMPLETATA! +"+m.reward+" MONETE");
-   beep(1000,.3);
+   notice("🏅 MISSIONE COMPLETATA! +"+m.reward+" MONETE");beep(1000,.3);
   }
  });
  save();updateHUD();
 }
-function burst(x,y,color,n){
- for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*300,vy:(Math.random()-.5)*300,life:.5+Math.random()*.6,color});
+function pauseGame(){
+ if(state!=="playing")return;
+ paused=true;cancelAnimationFrame(raf);$("pause").classList.add("hidden");
+ showPanel("pausePanel");
 }
-function drawBackground(dt){
- let m=mapData();
- let sky=ctx.createLinearGradient(0,0,0,H);
- sky.addColorStop(0,m.sky);sky.addColorStop(1,"#56677a");
+function resumeGame(){
+ showPanel("none");paused=false;$("pause").classList.remove("hidden");
+ last=performance.now();raf=requestAnimationFrame(loop);
+}
+function goMenu(){
+ cancelAnimationFrame(raf);state="menu";paused=false;
+ $("hud").classList.add("hidden");$("pause").classList.add("hidden");$("reaction").classList.add("hidden");
+ showPanel("none");$("menu").classList.remove("hidden");updateHUD();
+}
+function drawPoly(points,color){
+ ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(points[0][0],points[0][1]);
+ for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0],points[i][1]);
+ ctx.closePath();ctx.fill();
+}
+function map(){
+ return maps.find(m=>m.name===selectedMap)||maps[0];
+}
+function drawWorld(dt){
+ let m=map(),sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,m.sky);sky.addColorStop(.7,"#8494a0");sky.addColorStop(1,"#d2a47b");
  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
- // sole / luna
- ctx.fillStyle=selectedMap==="Notte"?"#d7e3ff":"#ffd58b";
- ctx.shadowBlur=35;ctx.shadowColor=ctx.fillStyle;
- ctx.beginPath();ctx.arc(W*.8,H*.18,selectedMap==="Notte"?23:35,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
- // skyline
- for(let i=0;i<12;i++){
-  let x=(i*W/9-(performance.now()*.012)%W);
-  let bh=H*(.12+(i%4)*.045);
-  ctx.fillStyle=i%2?"#152338":"#1d3046";
-  ctx.fillRect(x,H*.52-bh,W/12,bh);
-  for(let j=0;j<4;j++){ctx.fillStyle="#f5ca76";ctx.fillRect(x+8+j*12,H*.52-bh+12,5,8)}
+ let night=selectedMap==="Notte"||selectedMap==="Neon City";
+ // luce nel cielo
+ let glow=ctx.createRadialGradient(W*.76,H*.27,3,W*.76,H*.27,H*.4);
+ glow.addColorStop(0,night?"#8c9bff55":"#ffbd7066");glow.addColorStop(1,"transparent");
+ ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+ // edifici con profondità
+ for(let i=0;i<15;i++){
+  let x=i*W/11-(performance.now()*.012%W);
+  let height=H*(.15+(i%4)*.055);
+  let top=H*.57-height;
+  let c=i%2?"#192a3c":"#25364a";
+  drawPoly([[x,top],[x+W/12,top-12],[x+W/12,H*.59],[x,H*.59]],c);
+  ctx.fillStyle=night?"#8ba7ff77":"#ffc97788";
+  for(let wy=top+14;wy<H*.55;wy+=23)for(let wx=x+9;wx<x+W/12-7;wx+=18)ctx.fillRect(wx,wy,6,9);
  }
- // strada
- ctx.fillStyle=m.road;ctx.fillRect(0,H*.65,W,H*.35);
- ctx.fillStyle="#e7d7a5";ctx.fillRect(0,H*.65,W,4);
- ctx.fillStyle="#f2d36e";
- for(let x=-(performance.now()*.25%100);x<W;x+=100)ctx.fillRect(x,H*.83,48,5);
- // marciapiede
- ctx.fillStyle="#69717a";ctx.fillRect(0,H*.62,W,H*.04);
+ // orizzonte
+ drawPoly([[0,H*.58],[W,H*.58],[W,H*.7],[0,H*.7]],"#3d4a50");
+ // strada in prospettiva
+ drawPoly([[W*.42,H*.58],[W*.58,H*.58],[W*1.18,H],[W*-.18,H]],m.road);
+ drawPoly([[W*.415,H*.58],[W*.42,H*.58],[W*.13,H],[W*.09,H]],"#d6c7a0");
+ drawPoly([[W*.58,H*.58],[W*.585,H*.58],[W*.91,H],[W*.87,H]],"#d6c7a0");
+ // linee prospettiche
+ for(let i=0;i<5;i++){
+  let p=(i/5+(performance.now()*.00018)%1);
+  let y=H*.59+p*p*H*.41;
+  let half= W*.01+p*W*.018;
+  ctx.fillStyle="#ffe5a7";
+  ctx.fillRect(W/2-half/2,y,half,Math.max(2,p*8));
+ }
+ // lampioni
+ for(let i=0;i<5;i++){
+  let x=i*W/4-(performance.now()*.018%W);
+  ctx.strokeStyle="#172333";ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(x,H*.58);ctx.lineTo(x,H*.34);ctx.lineTo(x+25,H*.34);ctx.stroke();
+  ctx.fillStyle="#fff2b8";ctx.shadowBlur=20;ctx.shadowColor="#ffe39b";
+  ctx.beginPath();ctx.arc(x+25,H*.34,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ }
+ // ombre e asfalto lucido
+ ctx.fillStyle="#ffffff09";ctx.fillRect(0,H*.7,W,H*.3);
  if(rain){
-  ctx.strokeStyle="#a9d7ff88";ctx.lineWidth=1.5;
-  for(let i=0;i<90;i++){
-   let x=(i*97+performance.now()*.45)%W,y=(i*53+performance.now()*.8)%H;
-   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-8,y+20);ctx.stroke();
+  ctx.strokeStyle="#b7ddff66";ctx.lineWidth=1.5;
+  for(let i=0;i<100;i++){
+   let x=(i*83+performance.now()*.5)%W,y=(i*59+performance.now()*.9)%H;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-9,y+20);ctx.stroke();
+  }
+  for(let i=0;i<5;i++){
+   ctx.fillStyle="#a5d8ff17";ctx.beginPath();
+   ctx.ellipse(i*W/4,H*.88,35,5,0,0,7);ctx.fill();
   }
  }
+ if(storm&&Math.random()<dt*.10)lightning=1;
  if(lightning>0){
   ctx.fillStyle="rgba(220,235,255,"+(lightning*.6)+")";ctx.fillRect(0,0,W,H);
-  lightning=Math.max(0,lightning-dt*2.5);
+  lightning=Math.max(0,lightning-dt*3);
  }
 }
 function drawDog(x,y){
  ctx.save();ctx.translate(x,y);
+ let fur=dogSkin==="Cane dorato"?"#e7ae39":dogSkin==="Cane ninja"?"#252c3b":dogSkin==="Cane leggendario"?"#d8dce7":"#bc8050";
  // ombra
- ctx.fillStyle="#0006";ctx.beginPath();ctx.ellipse(0,10,30,8,0,0,Math.PI*2);ctx.fill();
- let color=dogSkin==="Cane dorato"?"#e5ae38":dogSkin==="Cane ninja"?"#252b39":dogSkin==="Cane leggendario"?"#d9dbe3":"#c58b55";
- ctx.fillStyle=color;
- ctx.beginPath();ctx.ellipse(0,-12,24,18,0,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.arc(18,-29,17,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.ellipse(7,-43,7,15,-.4,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.ellipse(29,-43,7,15,.4,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#17131a";ctx.beginPath();ctx.arc(24,-31,2.5,0,7);ctx.fill();
- ctx.beginPath();ctx.arc(34,-25,4,0,7);ctx.fill();
- ctx.strokeStyle=color;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-19,-17);ctx.quadraticCurveTo(-37,-35,-31,-43);ctx.stroke();
- ctx.fillStyle="#fff";ctx.fillRect(-10,0,7,12);ctx.fillRect(12,0,7,12);
+ ctx.fillStyle="#0007";ctx.beginPath();ctx.ellipse(0,7,34,9,0,0,7);ctx.fill();
+ // corpo
+ ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(0,-21,27,20,-.1,0,7);ctx.fill();
+ // testa e muso
+ ctx.beginPath();ctx.arc(20,-42,19,0,7);ctx.fill();
+ ctx.fillStyle=fur;ctx.beginPath();ctx.ellipse(31,-35,13,9,.2,0,7);ctx.fill();
+ // orecchie
+ ctx.beginPath();ctx.ellipse(8,-55,8,17,-.3,0,7);ctx.ellipse(29,-58,8,17,.3,0,7);ctx.fill();
+ // occhi
+ ctx.fillStyle="#17151a";ctx.beginPath();ctx.arc(25,-45,2.8,0,7);ctx.fill();
+ ctx.fillStyle="#111";ctx.beginPath();ctx.arc(39,-37,3.5,0,7);ctx.fill();
+ // zampe
+ ctx.fillStyle=fur;ctx.fillRect(-17,-8,9,18);ctx.fillRect(13,-8,9,18);
+ // coda
+ ctx.strokeStyle=fur;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-23,-26);ctx.quadraticCurveTo(-43,-39,-37,-48);ctx.stroke();
  ctx.restore();
 }
-function drawFrancesco(x,y){
+function drawPerson(x,y){
  ctx.save();ctx.translate(x,y);
- ctx.fillStyle="#0005";ctx.beginPath();ctx.ellipse(0,7,20,6,0,0,7);ctx.fill();
- ctx.fillStyle="#202c49";ctx.fillRect(-13,-40,26,40);
- ctx.fillStyle="#dca77e";ctx.beginPath();ctx.arc(0,-51,12,0,7);ctx.fill();
- ctx.fillStyle="#34251e";ctx.beginPath();ctx.arc(0,-57,12,Math.PI,Math.PI*2);ctx.fill();
- ctx.fillStyle="#fff";ctx.fillRect(-13,-18,8,5);
+ ctx.fillStyle="#0006";ctx.beginPath();ctx.ellipse(0,5,17,6,0,0,7);ctx.fill();
+ ctx.fillStyle="#1c3150";ctx.beginPath();ctx.roundRect(-12,-43,24,42,6);ctx.fill();
+ ctx.fillStyle="#d6a27d";ctx.beginPath();ctx.arc(0,-54,12,0,7);ctx.fill();
+ ctx.fillStyle="#33251d";ctx.beginPath();ctx.arc(0,-60,12,Math.PI,7);ctx.fill();
+ ctx.fillStyle="#e2e9f2";ctx.fillRect(-10,-17,7,5);
  ctx.restore();
 }
 function drawCar(x,y){
  ctx.save();ctx.translate(x,y);
- // ombra
- ctx.fillStyle="#0009";ctx.beginPath();ctx.ellipse(0,13,70,12,0,0,7);ctx.fill();
+ ctx.fillStyle="#0009";ctx.beginPath();ctx.ellipse(0,9,83,14,0,0,7);ctx.fill();
  // carrozzeria
- ctx.fillStyle="#1262c5";ctx.beginPath();ctx.moveTo(-76,-12);ctx.lineTo(-62,-34);ctx.lineTo(-30,-47);ctx.lineTo(27,-45);ctx.lineTo(54,-23);ctx.lineTo(75,-12);ctx.lineTo(76,5);ctx.lineTo(-76,5);ctx.closePath();ctx.fill();
- ctx.fillStyle="#91c8f0";ctx.beginPath();ctx.moveTo(-46,-34);ctx.lineTo(-27,-43);ctx.lineTo(20,-41);ctx.lineTo(42,-22);ctx.lineTo(-48,-22);ctx.fill();
- ctx.fillStyle="#111923";ctx.fillRect(-35,-22,8,4);
- ctx.fillStyle="#f9edb1";ctx.fillRect(-78,-13,9,8);
- ctx.fillStyle="#ed3029";ctx.fillRect(68,-12,8,9);
- ctx.fillStyle="#10151b";
- for(let xw of [-45,43]){
-  ctx.beginPath();ctx.arc(xw,5,15,0,7);ctx.fill();
-  ctx.fillStyle="#b6c2d0";ctx.beginPath();ctx.arc(xw,5,7,0,7);ctx.fill();ctx.fillStyle="#10151b";
+ drawPoly([[-82,-13],[-70,-36],[-40,-47],[25,-47],[58,-29],[80,-14],[83,5],[-83,5]],"#1255a5");
+ drawPoly([[-48,-35],[-27,-49],[23,-48],[48,-26],[-51,-26]],"#b4e3fa");
+ drawPoly([[-43,-34],[-24,-46],[-3,-46],[-3,-28],[-48,-28]],"#477b9c");
+ drawPoly([[1,-46],[22,-45],[44,-28],[1,-28]],"#477b9c");
+ ctx.fillStyle="#70baff";ctx.fillRect(-70,-16,125,5);
+ ctx.fillStyle="#fff0b2";ctx.shadowBlur=22;ctx.shadowColor="#fff1b3";
+ ctx.fillRect(-82,-13,10,8);ctx.shadowBlur=0;
+ ctx.fillStyle="#f54c42";ctx.fillRect(74,-13,8,8);
+ for(let wx of [-48,48]){
+  ctx.fillStyle="#090d14";ctx.beginPath();ctx.arc(wx,5,16,0,7);ctx.fill();
+  ctx.fillStyle="#b6c2d1";ctx.beginPath();ctx.arc(wx,5,8,0,7);ctx.fill();
+  ctx.fillStyle="#536273";ctx.beginPath();ctx.arc(wx,5,3,0,7);ctx.fill();
  }
- ctx.fillStyle="#d8e5f3";ctx.fillRect(-79,-7,8,7);
  ctx.restore();
 }
-function draw(){
- ctx.clearRect(0,0,W,H);
- drawBackground(0);
- let y=H*.72;
- drawFrancesco(W*.12,y);drawDog(W*.29,y);
- // veicoli secondari
+function drawTraffic(){
  traffic.forEach(t=>{
-  ctx.fillStyle=t.color;ctx.fillRect(t.x,y-28,65,27);
-  ctx.fillStyle="#151a22";ctx.fillRect(t.x+8,y-34,38,10);
-  ctx.fillStyle="#111";ctx.beginPath();ctx.arc(t.x+12,y,7,0,7);ctx.arc(t.x+52,y,7,0,7);ctx.fill();
+  let y=H*.76;
+  if(t.police){
+   ctx.fillStyle="#1b2b44";ctx.fillRect(t.x,y-24,60,23);
+   ctx.fillStyle="#dfeaff";ctx.fillRect(t.x+7,y-32,40,11);
+   ctx.fillStyle="#e33";ctx.fillRect(t.x+20,y-38,10,5);
+   ctx.fillStyle="#39aaff";ctx.fillRect(t.x+32,y-38,10,5);
+  }else{
+   ctx.fillStyle=t.color;ctx.fillRect(t.x,y-26,58,24);
+   ctx.fillStyle="#829bb1";ctx.fillRect(t.x+10,y-33,35,10);
+  }
+  ctx.fillStyle="#090d13";
+  ctx.beginPath();ctx.arc(t.x+12,y,7,0,7);ctx.arc(t.x+48,y,7,0,7);ctx.fill();
  });
- if(state==="playing"&&deadline>0){
-  drawCar(carX,y);
- }else if(state==="playing"){
-  drawCar(carX,y);
- }
- // particelle
+}
+function draw(){
+ ctx.clearRect(0,0,W,H);drawWorld(0);
+ let y=H*.77;
+ drawPerson(W*.14,y);drawDog(W*.30,y);
+ drawTraffic();
+ if(state==="playing")drawCar(carX,y);
  particles.forEach(p=>{
-  ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;
-  ctx.fillRect(p.x,p.y,5,5);ctx.globalAlpha=1;
+  ctx.globalAlpha=Math.max(0,p.life);
+  ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,p.size,p.size);ctx.globalAlpha=1;
  });
- // vignetta cinematografica
- let g=ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.8);
- g.addColorStop(0,"transparent");g.addColorStop(1,"#0008");
- ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ // vignettatura
+ let v=ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.85);
+ v.addColorStop(0,"transparent");v.addColorStop(1,"#0008");
+ ctx.fillStyle=v;ctx.fillRect(0,0,W,H);
 }
 function loop(now){
  if(state!=="playing"||paused)return;
  let dt=Math.min((now-last)/1000,.05);last=now;
  if(deadline<=0&&!failed){
-  timer-=dt;
-  carX=Math.max(W*.52,carX-dt*W*.12);
+  timer-=dt;carX=Math.max(W*.52,carX-dt*W*.11);
   if(timer<=0){
    deadline=1.05;$("reaction").classList.remove("hidden");
-   say("⚠️ ORA! SALVA IL CANE!");
-   beep(700,.2,"square");
+   notice("⚠️ ADESSO! SALVA IL CANE!");beep(760,.18,"square");
   }
  }else if(deadline>0&&!failed){
-  deadline-=dt;carX=Math.max(W*.3,carX-dt*W*.45);
+  deadline-=dt;carX=Math.max(W*.29,carX-dt*W*.46);
   if(deadline<=0)fail();
  }
  traffic.forEach(t=>t.x-=t.speed*dt);
  traffic=traffic.filter(t=>t.x>-100);
- if(Math.random()<dt*.18)traffic.push({x:W+100,y:H*.68,speed:120,color:"#e5e8eb"});
- if(rain&&Math.random()<dt*.5)lightning=1;
  particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt});
  particles=particles.filter(p=>p.life>0);
- draw();
- raf=requestAnimationFrame(loop);
-}
-$("reaction").addEventListener("click",saveDog);
-$("pause").addEventListener("click",()=>{
- if(state!=="playing")return;
- paused=true;cancelAnimationFrame(raf);$("pause").classList.add("hidden");show("pausePanel");
-});
-function resumeGame(){
- show("none");paused=false;$("pause").classList.remove("hidden");last=performance.now();raf=requestAnimationFrame(loop);
-}
-function goMenu(){
- state="menu";paused=false;cancelAnimationFrame(raf);
- $("hud").classList.add("hidden");$("reaction").classList.add("hidden");$("pause").classList.add("hidden");
- openPanel("menu");
+ draw();raf=requestAnimationFrame(loop);
 }
 function renderShop(){
  $("shopCoins").textContent=coins;
  $("shopItems").innerHTML=shop.map(item=>{
   let has=owned.includes(item.name);
   return `<div class="card">${item.emoji} <b>${item.name}</b><br><small>${item.price} monete</small>
-  <button onclick="buyItem('${item.name}',${item.price})">${has?(dogSkin===item.name?"EQUIPAGGIATO":"USA"):"COMPRA"}</button><div style="clear:both"></div></div>`;
+  <button onclick="buyItem('${item.name}',${item.price})">${has?(dogSkin===item.name?"ATTIVO":"USA"):"COMPRA"}</button><div class="clear"></div></div>`;
  }).join("");
 }
 function buyItem(name,price){
  if(owned.includes(name)){dogSkin=name;save();renderShop();return}
- if(coins<price){say("Non hai abbastanza monete!");return}
- coins-=price;owned.push(name);dogSkin=name;save();renderShop();updateHUD();beep(800);
+ if(coins<price){notice("Monete insufficienti!");return}
+ coins-=price;owned.push(name);dogSkin=name;save();updateHUD();renderShop();beep(800,.2);
 }
 function renderMissions(){
  $("missionItems").innerHTML=missions.map((m,i)=>{
   let val=stats[m.key]||0,done=completed.includes(i);
-  return `<div class="card"><b>${done?"🏅":"🎯"} ${m.name}</b><br>${m.desc}<div class="progress"><div style="width:${Math.min(100,val/m.goal*100)}%"></div></div><small>${Math.min(val,m.goal)} / ${m.goal} · Premio ${m.reward} monete</small></div>`;
+  return `<div class="card"><b>${done?"🏅":"🎯"} ${m.name}</b><br>${m.desc}
+  <div class="progress"><div style="width:${Math.min(100,val/m.goal*100)}%"></div></div>
+  <small>${Math.min(val,m.goal)}/${m.goal} · Premio ${m.reward} monete</small></div>`;
  }).join("");
-}
-function renderRecords(){
- let arr=JSON.parse(localStorage.records||"[]");
- $("recordItems").innerHTML=`<div class="card">🏆 Record personale: <b>${best}</b></div>`+
- (arr.length?arr.map((v,i)=>`<div class="card">${i+1}. ${v} salvataggi</div>`).join(""):"<p>Completa una partita per registrare il tuo risultato!</p>");
 }
 function renderMaps(){
  $("mapItems").innerHTML=maps.map(m=>{
-  let ownedMap=m.price===0||unlockedMaps.includes(m.name)||localStorage["map_"+m.name];
+  let unlocked=m.price===0||localStorage["map_"+m.name]==="1";
   return `<div class="card">🌍 <b>${m.name}</b><br><small>${m.price===0?"Gratuita":m.price+" monete"}</small>
-  <button onclick="chooseMap('${m.name}',${m.price})">${selectedMap===m.name?"ATTIVA":ownedMap?"SELEZIONA":"SBLOCCA"}</button><div style="clear:both"></div></div>`;
+  <button onclick="chooseMap('${m.name}',${m.price})">${selectedMap===m.name?"ATTIVA":unlocked?"SELEZIONA":"SBLOCCA"}</button><div class="clear"></div></div>`;
  }).join("");
 }
 function chooseMap(name,price){
- let unlocked=price===0||localStorage["map_"+name];
+ let unlocked=price===0||localStorage["map_"+name]==="1";
  if(!unlocked){
-  if(coins<price){say("Monete insufficienti!");return}
+  if(coins<price){notice("Non hai abbastanza monete!");return}
   coins-=price;localStorage["map_"+name]="1";
  }
- selectedMap=name;save();renderMaps();updateHUD();beep(700);
+ selectedMap=name;save();renderMaps();updateHUD();beep(650,.15);
 }
-function finishRecords(){
- let arr=JSON.parse(localStorage.records||"[]");
- arr.push(score);arr.sort((a,b)=>b-a);localStorage.records=JSON.stringify(arr.slice(0,10));
+function renderRecords(){
+ $("recordItems").innerHTML=`<div class="card">🏆 Record personale: <b>${best}</b></div>`+
+ (records.length?records.map((v,i)=>`<div class="card">${i+1}. ${v} salvataggi</div>`).join(""):"<p>Ancora nessun risultato. Inizia a giocare!</p>");
 }
-const oldEndAccident=endAccident;
-function endAccident(message){
- if(lives<=0){
-  finishRecords();
-  oldEndAccident(message);
- }
- else{
-  say(message);
-  setTimeout(()=>{if(state==="playing")nextRound()},2600);
- }
+function menuAnimation(){
+ if(state!=="playing")draw();
+ requestAnimationFrame(menuAnimation);
 }
-function drawMenuBackground(){
- if(state!=="playing"){draw();requestAnimationFrame(drawMenuBackground)}
-}
-drawMenuBackground();
-updateHUD();
+updateHUD();menuAnimation();
 </script>
 </body>
 </html>
