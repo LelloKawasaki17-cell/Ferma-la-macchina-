@@ -3,603 +3,475 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Save The Dog 2.0</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Save The Dog 3.0</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#090e1b;color:white;font-family:monospace;text-align:center}
-button{font-family:inherit;cursor:pointer;touch-action:manipulation}
-header{padding:17px 5px 10px}
-.logo{font-size:clamp(27px,7vw,46px);font-weight:bold;color:#ffe16b;text-shadow:3px 3px #d94b3e,6px 6px #54283a}
-.subtitle{font-size:10px;letter-spacing:4px;color:#9cb7d9;margin-top:8px}
-.stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px 5px}
-.stat{background:#1d304e;border:2px solid #526c94;border-radius:8px;padding:9px 13px;font-size:11px}
-.stat b{display:block;color:#ffe16b;font-size:18px;margin-top:4px}
-.container{width:96%;max-width:950px;margin:auto;background:#17243b;padding:8px;border:3px solid #526b92;border-radius:12px}
-canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#87d2f1;border:3px solid #080d18;image-rendering:pixelated}
-.menu{background:linear-gradient(145deg,#1d3556,#10192b);border:2px solid #536e97;border-radius:9px;padding:15px;margin:10px 2px}
-.menu h2{color:#ffe16b}
-.menu p{font-size:12px;line-height:1.8;color:#c4d3e9}
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:13px 0}
-.mode{background:#263a5b;color:#d9e8ff;border:2px solid #506b91;border-radius:7px;padding:10px 3px;font-size:11px}
-.mode.selected{background:#ffe16b;color:#251b0a;border-color:white}
-.btn{border:0;border-radius:8px;padding:14px 10px;font-size:16px;font-weight:bold;box-shadow:0 5px #70451b}
-.gold{background:linear-gradient(#ffec8a,#f5b33c);color:#33210a}
-.green{background:linear-gradient(#83ffb0,#19c66b);color:#06371c;box-shadow:0 5px #08713c}
-.blue{background:linear-gradient(#8bd5ff,#328ee9);color:#071e36;box-shadow:0 5px #17508d}
-.btn:active{transform:translateY(4px)}
-.hud{display:flex;justify-content:space-between;padding:10px 4px;font-size:11px}
-.bar{height:9px;background:#080d18;border-radius:10px;overflow:hidden;margin:5px 3px}
-#progress{height:100%;width:0;background:#42ed88}
-.message{min-height:45px;padding:12px 4px;color:#ffe99a;font-size:13px;line-height:1.6}
-.controls{display:grid;gap:10px;padding:6px 4px 12px}
-#save{display:none;font-size:24px;animation:pulse .4s infinite alternate}
-@keyframes pulse{to{filter:brightness(1.3);transform:scale(1.02)}}
-#gameUI{display:none}
-.panel{width:96%;max-width:950px;margin:14px auto;background:#131e32;border:1px solid #344968;border-radius:10px;padding:14px;font-size:12px;line-height:2;color:#b8c9e5}
-.panel strong{color:#ffe16b}
-.small{background:#293c5b;color:white;border:1px solid #607ba4;border-radius:7px;padding:10px;font-size:11px;margin:5px}
-#overlay{display:none;position:fixed;inset:0;z-index:10;background:#050914ed;align-items:center;justify-content:center;padding:15px}
-.modal{width:min(100%,430px);padding:22px 17px;border:3px solid #ffcf50;border-radius:12px;background:linear-gradient(145deg,#263b5a,#111a2c)}
-.modal h2{color:#ffe16b;font-size:25px}
-.modal p{font-size:13px;line-height:1.9;color:#e3eaff}
-.modal button{width:100%;margin-top:9px}
-footer{padding:18px;color:#536681;font-size:10px}
-@media(max-width:420px){.modes{grid-template-columns:1fr}.mode{padding:9px}}
+body{margin:0;background:#080d18;color:white;font-family:Arial,sans-serif;overflow:hidden}
+button{border:0;border-radius:12px;padding:13px 17px;font-weight:bold;color:white;background:linear-gradient(135deg,#ff9d27,#e64b20);cursor:pointer}
+button:active{transform:scale(.96)}
+#game{width:100vw;height:100dvh;position:relative;overflow:hidden;background:#101a2b}
+canvas{width:100%;height:100%;display:block}
+.panel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#07101deF,#101d31ed);padding:18px;overflow:auto}
+.box{width:min(440px,100%);max-height:94%;overflow:auto;text-align:center;padding:24px 20px;border:1px solid #ffffff30;border-radius:22px;background:#101b2beF;box-shadow:0 15px 60px #000b}
+h1{font-size:clamp(32px,9vw,48px);margin:5px 0;color:#ffb13b;text-shadow:0 4px 20px #ff6a2466}
+h2{color:#ffc15a}
+p{color:#cbd6e8;line-height:1.45}
+.row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+.row button{flex:1;min-width:110px}
+.small{font-size:12px;color:#aabbd1}
+.card{background:#ffffff0d;border:1px solid #ffffff20;padding:12px;border-radius:13px;margin:9px 0;text-align:left}
+.card button{float:right;padding:9px 12px}
+#hud{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;gap:7px;pointer-events:none}
+.huditem{background:#07101dcc;padding:9px 12px;border-radius:11px;font-size:13px;border:1px solid #ffffff25}
+#reaction{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);width:min(290px,75vw);font-size:22px;padding:18px;background:linear-gradient(135deg,#ffbd39,#ed432b);box-shadow:0 0 30px #ff7a3970}
+#reaction:active{transform:translateX(-50%) scale(.95)}
+#pause{position:absolute;right:12px;bottom:24px;background:#182d49}
+#notice{position:absolute;top:75px;left:50%;transform:translateX(-50%);width:90%;text-align:center;font-size:17px;font-weight:bold;text-shadow:0 3px 8px black;pointer-events:none}
+.hidden{display:none!important}
+.progress{height:9px;background:#ffffff20;border-radius:20px;overflow:hidden;margin:10px 0}
+.progress div{height:100%;width:0;background:#ffb33e}
 </style>
 </head>
 <body>
+<div id="game">
+<canvas id="scene"></canvas>
 
-<header>
-<div class="logo">🐶 SAVE THE DOG</div>
-<div class="subtitle">FRANCESCO EDITION • ARCADE 2.0</div>
-</header>
+<div id="hud" class="hidden">
+ <div class="huditem">⭐ <span id="score">0</span></div>
+ <div class="huditem">🪙 <span id="coins">0</span></div>
+ <div class="huditem">🏆 <span id="best">0</span></div>
+ <div class="huditem">❤️ <span id="lives">3</span></div>
+</div>
+<div id="notice"></div>
+<button id="reaction" class="hidden">🐶 SALVA IL CANE!</button>
+<button id="pause" class="hidden">Ⅱ</button>
 
-<div class="stats">
-<div class="stat">⭐ PUNTI<b id="score">0</b></div>
-<div class="stat">🏆 RECORD<b id="best">0</b></div>
-<div class="stat">🔥 LIVELLO<b id="level">1</b></div>
-</div>
-
-<div class="container">
-<canvas id="scene" width="960" height="540"></canvas>
-
-<div id="menu" class="menu">
-<h2>⚡ SCEGLI LA TUA MISSIONE</h2>
-<p>La Clio blu sta arrivando!<br>Francesco deve salvare il suo cane!</p>
-<div class="modes">
-<button class="mode selected" data-mode="classic">🎮 CLASSICA</button>
-<button class="mode" data-mode="inferno">🔥 INFERNO</button>
-<button class="mode" data-mode="survival">💀 SOPRAVVIVENZA</button>
-</div>
-<button class="small" id="soundToggle">🔊 AUDIO ON</button>
-<button class="btn gold" id="start" style="width:100%;margin-top:10px">▶ INIZIA LA MISSIONE</button>
-</div>
-
-<div id="gameUI">
-<div class="hud">
-<span id="phase">👀 PREPARATI</span>
-<span id="clock">⏱ --</span>
-</div>
-<div class="bar"><div id="progress"></div></div>
-<div class="message" id="message">La Clio si sta avvicinando...</div>
-<div class="controls">
-<button class="btn green" id="save">🐶 SALVA IL CANE!</button>
-<button class="btn blue" id="pause">Ⅱ PAUSA</button>
-</div>
-</div>
+<div id="menu" class="panel">
+ <div class="box">
+  <div style="font-size:55px">🐶 🚗</div>
+  <h1>SAVE THE DOG</h1>
+  <div style="color:#ffb13b;font-weight:bold;letter-spacing:4px">CINEMATIC EDITION 3.0</div>
+  <p>Una corsa contro il tempo. Salva il cane prima che arrivi la Clio!</p>
+  <div class="row">
+   <button onclick="startGame()">▶ GIOCA</button>
+   <button onclick="openPanel('shop')">🛒 NEGOZIO</button>
+  </div>
+  <div class="row">
+   <button onclick="openPanel('missions')">🎯 MISSIONI</button>
+   <button onclick="openPanel('records')">🏆 RECORD</button>
+  </div>
+  <div class="row">
+   <button onclick="openPanel('maps')">🌍 MAPPE</button>
+   <button onclick="toggleSound()">🔊 AUDIO <span id="audioLabel">ON</span></button>
+  </div>
+  <p class="small">Regola speciale: il padre di Francesco compare con il 35% di probabilità dopo un incidente!</p>
+ </div>
 </div>
 
-<div class="panel">
-<strong>📜 LE REGOLE DI FRANCESCO</strong><br>
-Salva il cane e guadagna punti!<br>
-Se fallisci, la Clio rompe il paraurti e devi offrire 10 pizze! 🍕<br>
-Ma attenzione: il padre può apparire con il 35% di probabilità! 👨
-</div>
+<div id="shop" class="panel hidden"><div class="box">
+ <h2>🛒 NEGOZIO</h2><p>Le tue monete: 🪙 <span id="shopCoins">0</span></p>
+ <div id="shopItems"></div>
+ <button onclick="openPanel('menu')">INDIETRO</button>
+</div></div>
 
-<div id="overlay">
-<div class="modal">
-<h2 id="endTitle">GAME OVER</h2>
-<p id="endText"></p>
-<button class="btn gold" id="again">↻ RIPROVA</button>
-<button class="btn blue" id="home">⌂ MENU PRINCIPALE</button>
-</div>
-</div>
+<div id="missions" class="panel hidden"><div class="box">
+ <h2>🎯 MISSIONI E OBIETTIVI</h2><div id="missionItems"></div>
+ <button onclick="openPanel('menu')">INDIETRO</button>
+</div></div>
 
-<footer>SAVE THE DOG 2.0 • FRANCESCO ESPOSITO • PIXEL ARCADE</footer>
+<div id="records" class="panel hidden"><div class="box">
+ <h2>🏆 CLASSIFICA RECORD</h2><div id="recordItems"></div>
+ <button onclick="openPanel('menu')">INDIETRO</button>
+</div></div>
+
+<div id="maps" class="panel hidden"><div class="box">
+ <h2>🌍 SELEZIONA MAPPA</h2><div id="mapItems"></div>
+ <button onclick="openPanel('menu')">INDIETRO</button>
+</div></div>
+
+<div id="pausePanel" class="panel hidden"><div class="box">
+ <h2>⏸ PAUSA</h2><p>La Clio aspetterà... per ora.</p>
+ <button onclick="resumeGame()">RIPRENDI</button>
+ <button onclick="goMenu()">MENU</button>
+</div></div>
+
+<div id="result" class="panel hidden"><div class="box">
+ <h2 id="resultTitle">PARTITA TERMINATA</h2>
+ <p id="resultText"></p>
+ <div class="row">
+  <button onclick="startGame()">RIGIOCA</button>
+  <button onclick="goMenu()">MENU</button>
+ </div>
+</div></div>
+</div>
 
 <script>
 const canvas=document.getElementById("scene");
 const ctx=canvas.getContext("2d");
 const $=id=>document.getElementById(id);
-const W=960,H=540;
+let W=900,H=600,scale=1;
+let state="menu",score=0,lives=3,round=0,coins=Number(localStorage.coins||0);
+let best=Number(localStorage.best||0),timer=0,deadline=0,carX=1000;
+let last=0,raf=0,paused=false,failed=false;
+let rain=false,lightning=0,traffic=[],particles=[],clouds=[];
+let sound=true,audioCtx=null,noticeTimer=0;
+let selectedMap=localStorage.map||"Città";
+let owned=JSON.parse(localStorage.owned||'["Cane classico"]');
+let dogSkin=localStorage.dogSkin||"Cane classico";
+let unlockedMaps=["Città"];
+let missions=[
+ {name:"Primo salvataggio",desc:"Salva un cane almeno una volta",goal:1,key:"rescues",reward:30},
+ {name:"Eroe dei cani",desc:"Salva 10 cani",goal:10,key:"rescues",reward:100},
+ {name:"Collezionista",desc:"Accumula 200 monete",goal:200,key:"coinsEarned",reward:60},
+ {name:"Senza paura",desc:"Completa 5 salvataggi consecutivi",goal:5,key:"streak",reward:80}
+];
+let stats=JSON.parse(localStorage.stats||'{"rescues":0,"coinsEarned":0,"streak":0}');
+let completed=JSON.parse(localStorage.completed||"[]");
+let maps=[
+ {name:"Città",price:0,sky:"#172a45",road:"#30343d"},
+ {name:"Notte",price:100,sky:"#090e2c",road:"#191d2a"},
+ {name:"Temporale",price:150,sky:"#263448",road:"#252d39"},
+ {name:"Campagna",price:200,sky:"#345b50",road:"#41433a"},
+ {name:"Neon City",price:300,sky:"#241344",road:"#202034"}
+];
+let shop=[
+ {name:"Cane classico",price:0,emoji:"🐶"},
+ {name:"Cane coraggioso",price:60,emoji:"🐕"},
+ {name:"Cane dorato",price:120,emoji:"🐕‍🦺"},
+ {name:"Cane ninja",price:180,emoji:"🥷"},
+ {name:"Cane leggendario",price:300,emoji:"🐺"}
+];
+let mapData=()=>maps.find(m=>m.name===selectedMap)||maps[0];
+function resize(){
+ const d=Math.min(devicePixelRatio||1,2);
+ W=canvas.clientWidth;H=canvas.clientHeight;
+ canvas.width=W*d;canvas.height=H*d;ctx.setTransform(d,0,0,d,0,0);
+}
+window.addEventListener("resize",resize);resize();
 
-let state="menu";
-let mode="classic";
-let score=0,level=1;
-let best=Number(localStorage.getItem("francescoBest")||0);
-let soundOn=true,audio=null;
-let startTime=0,waitTime=0,deadline=0;
-let reactionDuration=1100;
-let carX=1050,roadOffset=0,cloudOffset=0,frame=0;
-let particles=[];
-let eventName="";
-let pauseAt=0,previousState="";
-let roundTimeout=null;
-
-$("best").textContent=best;
-
-function sound(freq=440,duration=.13,type="square"){
- if(!soundOn)return;
+function show(id){document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));if(id!=="none")$(id).classList.remove("hidden")}
+function openPanel(name){
+ state="menu";$("hud").classList.add("hidden");$("reaction").classList.add("hidden");$("pause").classList.add("hidden");
+ show(name==="menu"?"menu":name);
+ if(name==="shop")renderShop();
+ if(name==="missions")renderMissions();
+ if(name==="records")renderRecords();
+ if(name==="maps")renderMaps();
+}
+function save(){
+ localStorage.coins=coins;localStorage.best=best;
+ localStorage.stats=JSON.stringify(stats);
+ localStorage.completed=JSON.stringify(completed);
+ localStorage.owned=JSON.stringify(owned);
+ localStorage.dogSkin=dogSkin;localStorage.map=selectedMap;
+}
+function updateHUD(){
+ $("score").textContent=score;$("coins").textContent=coins;
+ $("best").textContent=best;$("lives").textContent=lives;
+}
+function audio(){
+ if(!sound)return;
  try{
-  audio=audio||new(window.AudioContext||window.webkitAudioContext)();
-  if(audio.state==="suspended")audio.resume();
-  const o=audio.createOscillator();
-  const g=audio.createGain();
-  o.type=type;
-  o.frequency.value=freq;
-  g.gain.setValueAtTime(.07,audio.currentTime);
-  g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
-  o.connect(g);
-  g.connect(audio.destination);
-  o.start();
-  o.stop(audio.currentTime+duration);
+  audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+  if(audioCtx.state==="suspended")audioCtx.resume();
+  return audioCtx;
  }catch(e){}
 }
-
-function rect(x,y,w,h,color){
- ctx.fillStyle=color;
- ctx.fillRect(Math.round(x),Math.round(y),w,h);
+function beep(freq=440,duration=.12,type="sine",vol=.07){
+ let a=audio();if(!a)return;
+ let o=a.createOscillator(),g=a.createGain();
+ o.type=type;o.frequency.value=freq;g.gain.value=vol;
+ o.connect(g);g.connect(a.destination);o.start();
+ g.gain.exponentialRampToValueAtTime(.001,a.currentTime+duration);
+ o.stop(a.currentTime+duration);
 }
-function label(t,x,y,size,color="#fff",align="left"){
- ctx.font="bold "+size+"px monospace";
- ctx.textAlign=align;
- ctx.fillStyle=color;
- ctx.fillText(t,x,y);
+function toggleSound(){sound=!sound;$("audioLabel").textContent=sound?"ON":"OFF";if(sound)beep(600)}
+function say(t){
+ $("notice").textContent=t;clearTimeout(noticeTimer);
+ noticeTimer=setTimeout(()=>$("notice").textContent="",2500);
 }
-
-function cloud(x,y){
- rect(x,y,100,17,"#fff");
- rect(x+20,y-15,45,22,"#fff");
- rect(x+58,y-8,30,18,"#fff");
-}
-function tree(x,y,s=1){
- rect(x+20*s,y+50*s,17*s,70*s,"#70472f");
- rect(x,y+15*s,58*s,48*s,"#236b3d");
- rect(x+9*s,y,40*s,50*s,"#39964c");
- rect(x+20*s,y-10*s,20*s,22*s,"#56b85b");
-}
-function building(x,y,color){
- rect(x,y,150,155,color);
- rect(x-7,y-18,164,22,"#b95444");
- rect(x+15,y+35,40,42,"#9ce2ef");
- rect(x+95,y+35,40,42,"#9ce2ef");
- rect(x+60,y+95,35,60,"#67452f");
-}
-
-function background(){
- let night=mode==="inferno"&&level>4;
- rect(0,0,W,H,night?"#26375e":"#87d2f1");
-
- if(night){
-  rect(790,50,48,48,"#fff1b1");
-  for(let i=0;i<30;i++)rect((i*97)%W,(i*43)%220,3,3,"#fff4c7");
- }else{
-  rect(790,55,70,70,"#ffe58b");
-  cloud((100+cloudOffset)%1100-100,80);
-  cloud((470+cloudOffset*.7)%1100-100,135);
- }
-
- rect(0,220,W,85,"#6caa98");
- building(30,180,"#dfb28b");
- building(780,180,"#e4c28d");
- rect(0,300,W,240,"#59a94c");
- rect(0,315,W,15,"#77c45a");
-
- for(let i=0;i<35;i++){
-  let x=(i*139-roadOffset*.3+W*10)%W;
-  rect(x,345+(i%4)*24,5,8,i%2?"#f7e27a":"#f5a6bb");
-  rect(x+7,350+(i%4)*24,5,6,"#328847");
- }
-
- rect(0,385,W,25,"#d1c5a1");
- for(let x=0;x<W;x+=70)rect(x,385,35,5,"#f6ebca");
- rect(0,410,W,130,"#343c4b");
- rect(0,410,W,8,"#e9e4ce");
- rect(0,525,W,8,"#e9e4ce");
-
- for(let x=-100;x<W+100;x+=180){
-  let xx=(x-roadOffset*1.5+W*10)%W;
-  rect(xx,466,85,8,"#f9e8a0");
- }
-
- for(let i=0;i<5;i++){
-  let x=(i*260-roadOffset*.5+W*10)%W;
-  rect(x,250,9,135,"#59606b");
-  rect(x-22,245,55,8,"#59606b");
-  rect(x+20,250,13,10,"#ffe89a");
- }
- tree((100-roadOffset*.25+W*10)%W,265,.9);
- tree((550-roadOffset*.25+W*10)%W,265,1.1);
- tree((900-roadOffset*.25+W*10)%W,265,.85);
-
- if(eventName==="PIOGGIA"){
-  for(let i=0;i<35;i++){
-   let x=(i*43+frame*7)%W;
-   let y=(i*83+frame*12)%540;
-   rect(x,y,2,12,"#b9eaff");
-  }
- }
-}
-
-function drawDog(){
- let x=210,y=355+Math.sin(frame*.12)*3;
- if(state==="saved")y-=Math.abs(Math.sin(frame*.15))*48;
-
- rect(x+62,y+13,14,8,"#ad6a39");
- rect(x+70,y+3+Math.sin(frame*.2)*5,10,9,"#ad6a39");
- rect(x+15,y+15,62,37,"#b97b45");
- rect(x+23,y+7,46,17,"#d39354");
- rect(x,y+2,38,36,"#d99b5d");
- rect(x-5,y-8,14,25,"#74452d");
- rect(x+26,y-8,14,25,"#74452d");
- rect(x-10,y+24,22,13,"#f2c48b");
- rect(x-7,y+20,8,7,"#222");
- rect(x+22,y+10,6,6,"#171717");
- rect(x+24,y+11,2,2,"#fff");
- let step=Math.sin(frame*.25)*3;
- rect(x+24,y+48+step,13,19,"#82512f");
- rect(x+60,y+48-step,13,19,"#82512f");
- rect(x+20,y+62+step,18,6,"#5d3928");
- rect(x+57,y+62-step,18,6,"#5d3928");
-
- if(state==="countdown"||state==="reaction")label("BAU!",x+20,y-23,17);
- if(state==="saved")label("♥",x+22,y-30,24,"#ffed70");
-}
-
-function drawFrancesco(){
- let x=75,y=320;
- rect(x+15,y+5,45,42,"#d99b70");
- rect(x+10,y,48,15,"#3a2520");
- rect(x+15,y+31,43,8,"#553025");
- rect(x+23,y+16,7,7,"#171717");
- rect(x+44,y+16,7,7,"#171717");
- rect(x+24,y+30,24,5,"#6d2929");
- rect(x+12,y+49,52,54,"#e0e5ee");
- rect(x+20,y+50,36,45,"#3c597d");
- rect(x+15,y+100,17,35,"#26344f");
- rect(x+43,y+100,17,35,"#26344f");
- rect(x+10,y+132,25,9,"#20232d");
- rect(x+41,y+132,25,9,"#20232d");
- rect(x+5,y+55,12,39,"#d99b70");
- rect(x+59,y+55,12,39,"#d99b70");
- label("F",x+37,y+78,13,"#fff","center");
-}
-
-function drawCar(){
- let x=carX,y=356;
-
- // La parte anteriore della Clio è a sinistra:
- // la macchina viaggia verso il cane.
- rect(x+20,y+115,240,12,"#202631");
- rect(x+5,y+47,245,69,"#0750b7");
- rect(x+42,y+20,157,37,"#176ddc");
- rect(x+55,y+24,55,28,"#9fe4f3");
- rect(x+119,y+24,67,28,"#9fe4f3");
- rect(x+16,y+53,215,5,"#5aa5ff");
- rect(x+45,y+64,120,4,"#3989f2");
-
- // Paraurti anteriore e fari a sinistra
- rect(x,y+85,18,25,"#a8c7e6");
- rect(x+238,y+85,18,25,"#17417a");
- rect(x+4,y+62,12,18,"#fff2a0");
- rect(x+4,y+92,12,12,"#ff6464");
-
- for(let xx of [x+40,x+182]){
-  rect(xx,y+98,48,40,"#10141d");
-  rect(xx+10,y+105,28,27,"#697482");
-  rect(xx+18,y+113,12,11,"#d7dce3");
- }
- rect(x+119,y+59,22,5,"#a9d9ff");
- rect(x+190,y+88,43,14,"#f4f4f0");
- label("CLIO",x+211,y+99,8,"#1b3151","center");
-
- if(state==="accident"||state==="father"){
-  rect(x,y+108,25,9,"#e1dce0");
-  rect(x+4,y+118,12,8,"#111");
- }
-}
-
-function drawFather(){
- let x=700,y=280;
- rect(x+15,y+5,50,48,"#d49a70");
- rect(x+9,y,58,16,"#51402d");
- rect(x+12,y+32,55,8,"#59402d");
- rect(x+24,y+17,7,7,"#111");
- rect(x+47,y+17,7,7,"#111");
- rect(x+25,y+34,28,4,"#4d2020");
- rect(x+10,y+53,60,75,"#8b3434");
- rect(x+16,y+125,19,40,"#292e3d");
- rect(x+45,y+125,19,40,"#292e3d");
- rect(x+4,y+63,14,50,"#d49a70");
- rect(x+65,y+63,14,50,"#d49a70");
- label("PAPÀ!",x+42,y-16,22,"#ffe16b","center");
-}
-
-function particlesBurst(x,y,color,count=30){
- for(let i=0;i<count;i++){
-  particles.push({
-   x,y,vx:(Math.random()-.5)*13,
-   vy:(Math.random()-.8)*13,
-   life:30+Math.random()*35,color
-  });
- }
-}
-function drawParticles(){
- for(let i=particles.length-1;i>=0;i--){
-  let p=particles[i];
-  p.x+=p.vx;p.y+=p.vy;p.vy+=.2;p.life--;
-  rect(p.x,p.y,7,7,p.color);
-  if(p.life<=0)particles.splice(i,1);
- }
-}
-
-function drawScene(){
- ctx.clearRect(0,0,W,H);
- background();
- drawDog();
- drawFrancesco();
- drawCar();
- if(state==="father")drawFather();
- drawParticles();
-
- if(state==="accident")label("BOOOOM!",480,145,38,"#ffed72","center");
- if(state==="father")label("È ARRIVATO PAPÀ!",480,145,30,"#fff","center");
- if(state==="saved")label("CANE SALVATO!",480,145,32,"#fff","center");
-
- if(state==="menu"){
-  ctx.fillStyle="#071225aa";
-  ctx.fillRect(0,0,W,H);
-  label("FRANCESCO'S MISSION",480,165,29,"#ffe36b","center");
-  label("SALVA IL CANE!",480,220,34,"#fff","center");
-  label("ATTENZIONE ALLA CLIO BLU",480,265,17,"#c5e8ff","center");
- }
-}
-
-function now(){return performance.now()}
-
-function nextRound(){
- if(roundTimeout){
-  clearTimeout(roundTimeout);
-  roundTimeout=null;
- }
- if(state==="menu"||state==="paused")return;
-
- state="countdown";
- carX=1050;
- eventName="";
-
- const roll=Math.random();
- if(roll<.12){
-  eventName="PIOGGIA";
- }else if(roll<.20){
-  eventName="BONUS";
- }
-
- waitTime=(Math.random()*3.7+1.5)*1000;
- if(mode==="inferno")waitTime*=.65;
- if(mode==="survival")waitTime*=.8;
- if(level>5)waitTime=Math.max(900,waitTime*.85);
-
- reactionDuration=mode==="inferno"?750:mode==="survival"?900:1100;
- reactionDuration=Math.max(500,reactionDuration-level*12);
-
- startTime=now();
- $("phase").textContent="👀 ATTENDI IL SEGNALE";
- $("clock").textContent="⏱ --";
- $("progress").style.width="0%";
- $("save").style.display="none";
-
- if(eventName==="PIOGGIA"){
-  $("message").textContent="🌧️ PIOGGIA! La strada è scivolosa!";
- }else if(eventName==="BONUS"){
-  $("message").textContent="⭐ MOMENTO BONUS! Preparati!";
- }else{
-  $("message").textContent="La Clio blu si sta avvicinando...";
- }
-}
-
 function startGame(){
- if(roundTimeout)clearTimeout(roundTimeout);
- roundTimeout=null;
- score=0;level=1;carX=1050;
- roadOffset=0;particles=[];
- $("score").textContent=0;
- $("level").textContent=1;
- $("menu").style.display="none";
- $("gameUI").style.display="block";
- $("overlay").style.display="none";
- $("pause").textContent="Ⅱ PAUSA";
- sound(600,.15);
- state="ready";
- nextRound();
+ score=0;lives=3;round=0;failed=false;paused=false;rain=false;
+ traffic=[];particles=[];state="playing";show("none");
+ $("hud").classList.remove("hidden");$("reaction").classList.add("hidden");
+ $("pause").classList.remove("hidden");updateHUD();
+ nextRound();last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
 }
-
+function nextRound(){
+ if(state!=="playing")return;
+ round++;failed=false;carX=W+250;
+ timer=2.7+Math.random()*2.2;
+ deadline=0;
+ $("reaction").classList.add("hidden");
+ rain=selectedMap==="Temporale"||Math.random()<.16;
+ traffic=[];
+ if(Math.random()<.55)traffic.push({x:W+180,y:H*.68,speed:100+Math.random()*90,color:"#d5d9e1"});
+ if(rain)say("🌧️ ATTENZIONE! STA ARRIVANDO IL TEMPORALE!");
+ else if(round%4===0)say("🚨 La strada è pericolosa!");
+ else say("🐶 Il cane è in pericolo!");
+}
 function saveDog(){
- if(state!=="reaction")return;
-
- state="saved";
- $("save").style.display="none";
-
- const points=eventName==="BONUS"?20*level:10*level;
- score+=points;
- level++;
-
- $("score").textContent=score;
- $("level").textContent=level;
- $("phase").textContent="🐶 SALVATAGGIO RIUSCITO";
- $("clock").textContent="✓";
- $("progress").style.width="100%";
- $("message").innerHTML="🎉 CANE SALVATO! +"+points+" PUNTI!";
-
- particlesBurst(230,390,"#ffe16b",35);
- particlesBurst(270,390,"#4effa0",20);
- sound(900,.2);
-
- if(score>best){
-  best=score;
-  localStorage.setItem("francescoBest",best);
-  $("best").textContent=best;
- }
-
- roundTimeout=setTimeout(()=>{
-  if(state==="saved")nextRound();
- },1300);
+ if(state!=="playing"||deadline<=0||failed)return;
+ failed=true;score++;stats.rescues++;stats.streak++;
+ coins+=10;stats.coinsEarned+=10;
+ if(score>best){best=score;localStorage.best=best}
+ save();updateHUD();beep(880,.18);
+ burst(W*.28,H*.68,"#ffdc70",20);
+ say("🐶 SALVATAGGIO RIUSCITO! +10 MONETE");
+ checkMissions();
+ setTimeout(()=>{if(state==="playing")nextRound()},1000);
+ deadline=0;
 }
-
 function fail(){
- if(state!=="reaction")return;
-
- state="accident";
- $("save").style.display="none";
- $("phase").textContent="💥 INCIDENTE!";
- $("clock").textContent="X";
- $("message").textContent="💥 LA CLIO HA ROTTO IL PARAURTI!";
-
- carX=210;
- particlesBurst(420,430,"#ffbd44",45);
- particlesBurst(450,410,"#ff5555",25);
- sound(100,.6,"sawtooth");
-
- roundTimeout=setTimeout(showPenalty,1100);
+ if(state!=="playing"||failed)return;
+ failed=true;deadline=0;lives--;stats.streak=0;
+ $("reaction").classList.add("hidden");
+ beep(90,.5,"sawtooth");
+ burst(W*.3,H*.68,"#ff552f",30);
+ // REGOLA FISSA: 35% ESATTO
+ const fatherAppears=Math.random()<0.35;
+ if(fatherAppears){
+  say("👨‍🦳 È ARRIVATO IL PADRE DI FRANCESCO!");
+  setTimeout(()=>{
+   if(state!=="playing")return;
+   say("«FRANCESCO! IL PARAURTI LO PAGO IO! LICENZIATI!»");
+   beep(260,.4,"triangle");
+   endAccident("Il padre di Francesco ha pagato il paraurti! Francesco non deve offrire pizze.");
+  },1800);
+ }else{
+  say("💥 INCIDENTE! IL PARAURTI È DISTRUTTO!");
+  setTimeout(()=>{
+   if(state!=="playing")return;
+   endAccident("Francesco deve offrire 10 PIZZE al proprietario della Clio per il paraurti!");
+  },1000);
+ }
 }
-
-function showPenalty(){
- if(state!=="accident")return;
-
- // Probabilità ESATTA del 35%
- const father=Math.random()<0.35;
- state=father?"father":"accident";
-
- $("endTitle").textContent=father?
-  "👨 È ARRIVATO PAPÀ!":"🍕 MULTA PIZZA!";
-
- $("endText").innerHTML=father?
-  "«FRANCESCO! Il paraurti lo pago io!<br><br>"+
-  "Basta con queste pizze!<br>"+
-  "E ADESSO LICENZIATI DA QUEL LAVORO DA LAVAPIATTI!<br><br>"+
-  "👨 Papà paga il danno.<br>🍕 10 pizze risparmiate!»":
-  "💥 La Clio blu ha distrutto il paraurti!<br><br>"+
-  "Il proprietario è furioso!<br>"+
-  "Francesco deve offrire 10 pizze!<br><br>"+
-  "🍕 RISARCIMENTO: 10 PIZZE";
-
- $("endText").innerHTML+="<br><br>🏆 PUNTEGGIO: "+score+
-  "<br>🔥 LIVELLO: "+level;
-
- $("overlay").style.display="flex";
- sound(father?600:180,.4);
+function endAccident(message){
+ if(lives<=0){
+  state="over";save();$("resultTitle").textContent="GAME OVER";
+  $("resultText").textContent=message+" Hai totalizzato "+score+" salvataggi.";
+  $("hud").classList.add("hidden");$("pause").classList.add("hidden");show("result");
+ }else{
+  say(message);
+  setTimeout(()=>{if(state==="playing")nextRound()},2600);
+ }
 }
-
-function update(){
- if(state==="countdown"){
-  const elapsed=now()-startTime;
-  const left=(startTime+waitTime-now())/1000;
-  const pct=Math.min(1,elapsed/waitTime);
-
-  // La macchina entra da destra e si avvicina al cane.
-  carX=1050-pct*680;
-
-  $("clock").textContent="⏱ "+Math.max(0,left).toFixed(1)+"s";
-  $("progress").style.width=(pct*100)+"%";
-
-  if(left<=0){
-   state="reaction";
-   deadline=now()+reactionDuration;
-   $("phase").textContent="🚨 ADESSO!";
-   $("message").innerHTML="🚨 PREMI SUBITO IL PULSANTE!";
-   $("save").style.display="block";
-   $("clock").textContent="⚡ ORA!";
-   sound(950,.15);
+function checkMissions(){
+ missions.forEach((m,i)=>{
+  let value=stats[m.key]||0;
+  if(!completed.includes(i)&&value>=m.goal){
+   completed.push(i);coins+=m.reward;stats.coinsEarned+=m.reward;
+   say("🏅 MISSIONE COMPLETATA! +"+m.reward+" MONETE");
+   beep(1000,.3);
+  }
+ });
+ save();updateHUD();
+}
+function burst(x,y,color,n){
+ for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*300,vy:(Math.random()-.5)*300,life:.5+Math.random()*.6,color});
+}
+function drawBackground(dt){
+ let m=mapData();
+ let sky=ctx.createLinearGradient(0,0,0,H);
+ sky.addColorStop(0,m.sky);sky.addColorStop(1,"#56677a");
+ ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ // sole / luna
+ ctx.fillStyle=selectedMap==="Notte"?"#d7e3ff":"#ffd58b";
+ ctx.shadowBlur=35;ctx.shadowColor=ctx.fillStyle;
+ ctx.beginPath();ctx.arc(W*.8,H*.18,selectedMap==="Notte"?23:35,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ // skyline
+ for(let i=0;i<12;i++){
+  let x=(i*W/9-(performance.now()*.012)%W);
+  let bh=H*(.12+(i%4)*.045);
+  ctx.fillStyle=i%2?"#152338":"#1d3046";
+  ctx.fillRect(x,H*.52-bh,W/12,bh);
+  for(let j=0;j<4;j++){ctx.fillStyle="#f5ca76";ctx.fillRect(x+8+j*12,H*.52-bh+12,5,8)}
+ }
+ // strada
+ ctx.fillStyle=m.road;ctx.fillRect(0,H*.65,W,H*.35);
+ ctx.fillStyle="#e7d7a5";ctx.fillRect(0,H*.65,W,4);
+ ctx.fillStyle="#f2d36e";
+ for(let x=-(performance.now()*.25%100);x<W;x+=100)ctx.fillRect(x,H*.83,48,5);
+ // marciapiede
+ ctx.fillStyle="#69717a";ctx.fillRect(0,H*.62,W,H*.04);
+ if(rain){
+  ctx.strokeStyle="#a9d7ff88";ctx.lineWidth=1.5;
+  for(let i=0;i<90;i++){
+   let x=(i*97+performance.now()*.45)%W,y=(i*53+performance.now()*.8)%H;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-8,y+20);ctx.stroke();
   }
  }
- else if(state==="reaction"){
-  const left=deadline-now();
-  const pct=Math.max(0,left/reactionDuration);
-
-  $("progress").style.width=(pct*100)+"%";
-  $("clock").textContent="⚡ "+Math.max(0,left/1000).toFixed(2)+"s";
-
-  // Accelerazione finale verso il cane.
-  carX=370-(1-pct)*160;
-
-  if(left<=0)fail();
+ if(lightning>0){
+  ctx.fillStyle="rgba(220,235,255,"+(lightning*.6)+")";ctx.fillRect(0,0,W,H);
+  lightning=Math.max(0,lightning-dt*2.5);
  }
-
- if(state==="countdown"||state==="reaction"||state==="saved"){
-  roadOffset+=2+level*.35;
-  cloudOffset+=.3;
+}
+function drawDog(x,y){
+ ctx.save();ctx.translate(x,y);
+ // ombra
+ ctx.fillStyle="#0006";ctx.beginPath();ctx.ellipse(0,10,30,8,0,0,Math.PI*2);ctx.fill();
+ let color=dogSkin==="Cane dorato"?"#e5ae38":dogSkin==="Cane ninja"?"#252b39":dogSkin==="Cane leggendario"?"#d9dbe3":"#c58b55";
+ ctx.fillStyle=color;
+ ctx.beginPath();ctx.ellipse(0,-12,24,18,0,0,Math.PI*2);ctx.fill();
+ ctx.beginPath();ctx.arc(18,-29,17,0,Math.PI*2);ctx.fill();
+ ctx.beginPath();ctx.ellipse(7,-43,7,15,-.4,0,Math.PI*2);ctx.fill();
+ ctx.beginPath();ctx.ellipse(29,-43,7,15,.4,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#17131a";ctx.beginPath();ctx.arc(24,-31,2.5,0,7);ctx.fill();
+ ctx.beginPath();ctx.arc(34,-25,4,0,7);ctx.fill();
+ ctx.strokeStyle=color;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-19,-17);ctx.quadraticCurveTo(-37,-35,-31,-43);ctx.stroke();
+ ctx.fillStyle="#fff";ctx.fillRect(-10,0,7,12);ctx.fillRect(12,0,7,12);
+ ctx.restore();
+}
+function drawFrancesco(x,y){
+ ctx.save();ctx.translate(x,y);
+ ctx.fillStyle="#0005";ctx.beginPath();ctx.ellipse(0,7,20,6,0,0,7);ctx.fill();
+ ctx.fillStyle="#202c49";ctx.fillRect(-13,-40,26,40);
+ ctx.fillStyle="#dca77e";ctx.beginPath();ctx.arc(0,-51,12,0,7);ctx.fill();
+ ctx.fillStyle="#34251e";ctx.beginPath();ctx.arc(0,-57,12,Math.PI,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#fff";ctx.fillRect(-13,-18,8,5);
+ ctx.restore();
+}
+function drawCar(x,y){
+ ctx.save();ctx.translate(x,y);
+ // ombra
+ ctx.fillStyle="#0009";ctx.beginPath();ctx.ellipse(0,13,70,12,0,0,7);ctx.fill();
+ // carrozzeria
+ ctx.fillStyle="#1262c5";ctx.beginPath();ctx.moveTo(-76,-12);ctx.lineTo(-62,-34);ctx.lineTo(-30,-47);ctx.lineTo(27,-45);ctx.lineTo(54,-23);ctx.lineTo(75,-12);ctx.lineTo(76,5);ctx.lineTo(-76,5);ctx.closePath();ctx.fill();
+ ctx.fillStyle="#91c8f0";ctx.beginPath();ctx.moveTo(-46,-34);ctx.lineTo(-27,-43);ctx.lineTo(20,-41);ctx.lineTo(42,-22);ctx.lineTo(-48,-22);ctx.fill();
+ ctx.fillStyle="#111923";ctx.fillRect(-35,-22,8,4);
+ ctx.fillStyle="#f9edb1";ctx.fillRect(-78,-13,9,8);
+ ctx.fillStyle="#ed3029";ctx.fillRect(68,-12,8,9);
+ ctx.fillStyle="#10151b";
+ for(let xw of [-45,43]){
+  ctx.beginPath();ctx.arc(xw,5,15,0,7);ctx.fill();
+  ctx.fillStyle="#b6c2d0";ctx.beginPath();ctx.arc(xw,5,7,0,7);ctx.fill();ctx.fillStyle="#10151b";
  }
- frame++;
+ ctx.fillStyle="#d8e5f3";ctx.fillRect(-79,-7,8,7);
+ ctx.restore();
 }
-
-function loop(){
- update();
- drawScene();
- requestAnimationFrame(loop);
-}
-
-function home(){
- if(roundTimeout)clearTimeout(roundTimeout);
- roundTimeout=null;
- state="menu";
- $("overlay").style.display="none";
- $("gameUI").style.display="none";
- $("menu").style.display="block";
- $("save").style.display="none";
- carX=1050;
- particles=[];
-}
-
-document.querySelectorAll(".mode").forEach(btn=>{
- btn.addEventListener("click",()=>{
-  document.querySelectorAll(".mode").forEach(b=>b.classList.remove("selected"));
-  btn.classList.add("selected");
-  mode=btn.dataset.mode;
-  sound(500,.08);
+function draw(){
+ ctx.clearRect(0,0,W,H);
+ drawBackground(0);
+ let y=H*.72;
+ drawFrancesco(W*.12,y);drawDog(W*.29,y);
+ // veicoli secondari
+ traffic.forEach(t=>{
+  ctx.fillStyle=t.color;ctx.fillRect(t.x,y-28,65,27);
+  ctx.fillStyle="#151a22";ctx.fillRect(t.x+8,y-34,38,10);
+  ctx.fillStyle="#111";ctx.beginPath();ctx.arc(t.x+12,y,7,0,7);ctx.arc(t.x+52,y,7,0,7);ctx.fill();
  });
-});
-
-$("soundToggle").addEventListener("click",()=>{
- soundOn=!soundOn;
- $("soundToggle").textContent=soundOn?"🔊 AUDIO ON":"🔇 AUDIO OFF";
- if(soundOn)sound(600,.1);
-});
-
-$("start").addEventListener("click",startGame);
-$("save").addEventListener("click",saveDog);
-$("again").addEventListener("click",startGame);
-$("home").addEventListener("click",home);
-
-$("pause").addEventListener("click",()=>{
- if(state==="paused"){
-  const elapsed=now()-pauseAt;
-  if(previousState==="countdown")startTime+=elapsed;
-  if(previousState==="reaction")deadline+=elapsed;
-  state=previousState;
-  $("pause").textContent="Ⅱ PAUSA";
-  $("message").textContent="La missione continua!";
- }else if(state==="countdown"||state==="reaction"){
-  previousState=state;
-  pauseAt=now();
-  state="paused";
-  $("pause").textContent="▶ RIPRENDI";
-  $("message").textContent="⏸ MISSIONE IN PAUSA";
+ if(state==="playing"&&deadline>0){
+  drawCar(carX,y);
+ }else if(state==="playing"){
+  drawCar(carX,y);
  }
+ // particelle
+ particles.forEach(p=>{
+  ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;
+  ctx.fillRect(p.x,p.y,5,5);ctx.globalAlpha=1;
+ });
+ // vignetta cinematografica
+ let g=ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.8);
+ g.addColorStop(0,"transparent");g.addColorStop(1,"#0008");
+ ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+}
+function loop(now){
+ if(state!=="playing"||paused)return;
+ let dt=Math.min((now-last)/1000,.05);last=now;
+ if(deadline<=0&&!failed){
+  timer-=dt;
+  carX=Math.max(W*.52,carX-dt*W*.12);
+  if(timer<=0){
+   deadline=1.05;$("reaction").classList.remove("hidden");
+   say("⚠️ ORA! SALVA IL CANE!");
+   beep(700,.2,"square");
+  }
+ }else if(deadline>0&&!failed){
+  deadline-=dt;carX=Math.max(W*.3,carX-dt*W*.45);
+  if(deadline<=0)fail();
+ }
+ traffic.forEach(t=>t.x-=t.speed*dt);
+ traffic=traffic.filter(t=>t.x>-100);
+ if(Math.random()<dt*.18)traffic.push({x:W+100,y:H*.68,speed:120,color:"#e5e8eb"});
+ if(rain&&Math.random()<dt*.5)lightning=1;
+ particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt});
+ particles=particles.filter(p=>p.life>0);
+ draw();
+ raf=requestAnimationFrame(loop);
+}
+$("reaction").addEventListener("click",saveDog);
+$("pause").addEventListener("click",()=>{
+ if(state!=="playing")return;
+ paused=true;cancelAnimationFrame(raf);$("pause").classList.add("hidden");show("pausePanel");
 });
-
-drawScene();
-requestAnimationFrame(loop);
+function resumeGame(){
+ show("none");paused=false;$("pause").classList.remove("hidden");last=performance.now();raf=requestAnimationFrame(loop);
+}
+function goMenu(){
+ state="menu";paused=false;cancelAnimationFrame(raf);
+ $("hud").classList.add("hidden");$("reaction").classList.add("hidden");$("pause").classList.add("hidden");
+ openPanel("menu");
+}
+function renderShop(){
+ $("shopCoins").textContent=coins;
+ $("shopItems").innerHTML=shop.map(item=>{
+  let has=owned.includes(item.name);
+  return `<div class="card">${item.emoji} <b>${item.name}</b><br><small>${item.price} monete</small>
+  <button onclick="buyItem('${item.name}',${item.price})">${has?(dogSkin===item.name?"EQUIPAGGIATO":"USA"):"COMPRA"}</button><div style="clear:both"></div></div>`;
+ }).join("");
+}
+function buyItem(name,price){
+ if(owned.includes(name)){dogSkin=name;save();renderShop();return}
+ if(coins<price){say("Non hai abbastanza monete!");return}
+ coins-=price;owned.push(name);dogSkin=name;save();renderShop();updateHUD();beep(800);
+}
+function renderMissions(){
+ $("missionItems").innerHTML=missions.map((m,i)=>{
+  let val=stats[m.key]||0,done=completed.includes(i);
+  return `<div class="card"><b>${done?"🏅":"🎯"} ${m.name}</b><br>${m.desc}<div class="progress"><div style="width:${Math.min(100,val/m.goal*100)}%"></div></div><small>${Math.min(val,m.goal)} / ${m.goal} · Premio ${m.reward} monete</small></div>`;
+ }).join("");
+}
+function renderRecords(){
+ let arr=JSON.parse(localStorage.records||"[]");
+ $("recordItems").innerHTML=`<div class="card">🏆 Record personale: <b>${best}</b></div>`+
+ (arr.length?arr.map((v,i)=>`<div class="card">${i+1}. ${v} salvataggi</div>`).join(""):"<p>Completa una partita per registrare il tuo risultato!</p>");
+}
+function renderMaps(){
+ $("mapItems").innerHTML=maps.map(m=>{
+  let ownedMap=m.price===0||unlockedMaps.includes(m.name)||localStorage["map_"+m.name];
+  return `<div class="card">🌍 <b>${m.name}</b><br><small>${m.price===0?"Gratuita":m.price+" monete"}</small>
+  <button onclick="chooseMap('${m.name}',${m.price})">${selectedMap===m.name?"ATTIVA":ownedMap?"SELEZIONA":"SBLOCCA"}</button><div style="clear:both"></div></div>`;
+ }).join("");
+}
+function chooseMap(name,price){
+ let unlocked=price===0||localStorage["map_"+name];
+ if(!unlocked){
+  if(coins<price){say("Monete insufficienti!");return}
+  coins-=price;localStorage["map_"+name]="1";
+ }
+ selectedMap=name;save();renderMaps();updateHUD();beep(700);
+}
+function finishRecords(){
+ let arr=JSON.parse(localStorage.records||"[]");
+ arr.push(score);arr.sort((a,b)=>b-a);localStorage.records=JSON.stringify(arr.slice(0,10));
+}
+const oldEndAccident=endAccident;
+function endAccident(message){
+ if(lives<=0){
+  finishRecords();
+  oldEndAccident(message);
+ }
+ else{
+  say(message);
+  setTimeout(()=>{if(state==="playing")nextRound()},2600);
+ }
+}
+function drawMenuBackground(){
+ if(state!=="playing"){draw();requestAnimationFrame(drawMenuBackground)}
+}
+drawMenuBackground();
+updateHUD();
 </script>
 </body>
 </html>
