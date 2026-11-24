@@ -3,180 +3,107 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Save The Dog 2.0</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#090d19;color:white;
- font-family:monospace;text-align:center;
- overflow-x:hidden;
-}
+body{margin:0;background:#090e1b;color:white;font-family:monospace;text-align:center}
 button{font-family:inherit;cursor:pointer;touch-action:manipulation}
-header{padding:17px 8px 10px}
-.logo{
- color:#ffe36b;font-size:clamp(28px,7vw,47px);
- font-weight:1000;letter-spacing:2px;
- text-shadow:3px 3px #e04c39,6px 6px #572438;
-}
-.subtitle{font-size:10px;letter-spacing:4px;color:#9db8dc;margin-top:8px}
-.stats{
- display:flex;justify-content:center;gap:8px;
- flex-wrap:wrap;padding:12px 5px;
-}
-.stat{
- background:linear-gradient(145deg,#263858,#121b2e);
- border:2px solid #506b96;border-radius:8px;
- padding:9px 13px;font-size:11px;
- box-shadow:0 4px #070b14;
-}
-.stat b{display:block;color:#ffe36b;font-size:17px;margin-top:5px}
-.container{
- width:min(96%,950px);margin:auto;
- background:#17243b;padding:9px;
- border:3px solid #526b92;border-radius:13px;
- box-shadow:0 8px #070b14,0 0 35px #1b477655;
-}
-canvas{
- display:block;width:100%;height:auto;
- aspect-ratio:16/9;background:#83c9ed;
- border:3px solid #080d18;border-radius:5px;
- image-rendering:pixelated;
-}
-.hud{
- display:flex;justify-content:space-between;
- gap:8px;padding:10px 4px 3px;
- color:#dce9ff;font-size:11px;
-}
-.bar{height:9px;background:#080d18;border-radius:10px;overflow:hidden;margin:7px 3px}
-#progress{height:100%;width:0;background:#42ed88;transition:width .06s linear}
-.message{
- min-height:48px;padding:12px 4px;
- color:#ffe99a;font-size:13px;line-height:1.6;
-}
-.controls{display:grid;gap:10px;padding:7px 4px 12px}
-.btn{
- border:0;border-radius:8px;padding:15px 10px;
- font-size:16px;font-weight:900;
- box-shadow:0 5px #70451b;
-}
-.btn:active{transform:translateY(4px);box-shadow:0 1px #70451b}
+header{padding:17px 5px 10px}
+.logo{font-size:clamp(27px,7vw,46px);font-weight:bold;color:#ffe16b;text-shadow:3px 3px #d94b3e,6px 6px #54283a}
+.subtitle{font-size:10px;letter-spacing:4px;color:#9cb7d9;margin-top:8px}
+.stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px 5px}
+.stat{background:#1d304e;border:2px solid #526c94;border-radius:8px;padding:9px 13px;font-size:11px}
+.stat b{display:block;color:#ffe16b;font-size:18px;margin-top:4px}
+.container{width:96%;max-width:950px;margin:auto;background:#17243b;padding:8px;border:3px solid #526b92;border-radius:12px}
+canvas{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#87d2f1;border:3px solid #080d18;image-rendering:pixelated}
+.menu{background:linear-gradient(145deg,#1d3556,#10192b);border:2px solid #536e97;border-radius:9px;padding:15px;margin:10px 2px}
+.menu h2{color:#ffe16b}
+.menu p{font-size:12px;line-height:1.8;color:#c4d3e9}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:13px 0}
+.mode{background:#263a5b;color:#d9e8ff;border:2px solid #506b91;border-radius:7px;padding:10px 3px;font-size:11px}
+.mode.selected{background:#ffe16b;color:#251b0a;border-color:white}
+.btn{border:0;border-radius:8px;padding:14px 10px;font-size:16px;font-weight:bold;box-shadow:0 5px #70451b}
 .gold{background:linear-gradient(#ffec8a,#f5b33c);color:#33210a}
 .green{background:linear-gradient(#83ffb0,#19c66b);color:#06371c;box-shadow:0 5px #08713c}
 .blue{background:linear-gradient(#8bd5ff,#328ee9);color:#071e36;box-shadow:0 5px #17508d}
-.red{background:linear-gradient(#ff9d9d,#e54d5a);color:#390b13;box-shadow:0 5px #802a34}
-#save{display:none;font-size:25px;animation:pulse .4s infinite alternate}
-@keyframes pulse{to{filter:brightness(1.3);transform:scale(1.015)}}
-.menu{
- background:linear-gradient(145deg,#1d3556,#10192b);
- border:2px solid #536e97;border-radius:10px;
- padding:16px;margin:10px 2px;
-}
-.menu h2{color:#ffe36b;margin:5px 0 14px}
-.menu p{font-size:12px;line-height:1.8;color:#c4d3e9}
-.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:13px 0}
-.mode{
- background:#263a5b;color:#d9e8ff;
- border:2px solid #506b91;border-radius:7px;
- padding:11px 4px;font-size:11px;
-}
-.mode.selected{background:#ffe16b;color:#251b0a;border-color:#fff2a6}
-.settings{
- display:flex;justify-content:center;gap:9px;
- flex-wrap:wrap;margin:10px 0;
-}
-.small{
- background:#293c5b;color:#fff;border:1px solid #607ba4;
- border-radius:7px;padding:10px;font-size:11px;
-}
-.panel{
- width:min(96%,950px);margin:15px auto;
- background:#131e32;border:1px solid #344968;
- border-radius:10px;padding:14px;
- font-size:12px;line-height:2;color:#b8c9e5;
-}
+.btn:active{transform:translateY(4px)}
+.hud{display:flex;justify-content:space-between;padding:10px 4px;font-size:11px}
+.bar{height:9px;background:#080d18;border-radius:10px;overflow:hidden;margin:5px 3px}
+#progress{height:100%;width:0;background:#42ed88}
+.message{min-height:45px;padding:12px 4px;color:#ffe99a;font-size:13px;line-height:1.6}
+.controls{display:grid;gap:10px;padding:6px 4px 12px}
+#save{display:none;font-size:24px;animation:pulse .4s infinite alternate}
+@keyframes pulse{to{filter:brightness(1.3);transform:scale(1.02)}}
+#gameUI{display:none}
+.panel{width:96%;max-width:950px;margin:14px auto;background:#131e32;border:1px solid #344968;border-radius:10px;padding:14px;font-size:12px;line-height:2;color:#b8c9e5}
 .panel strong{color:#ffe16b}
-#overlay{
- display:none;position:fixed;inset:0;z-index:10;
- background:#050914ed;align-items:center;
- justify-content:center;padding:15px;
-}
-.modal{
- width:min(100%,430px);padding:23px 18px;
- border:3px solid #ffcf50;border-radius:12px;
- background:linear-gradient(145deg,#263b5a,#111a2c);
- box-shadow:0 0 45px #f6a72b44;
-}
+.small{background:#293c5b;color:white;border:1px solid #607ba4;border-radius:7px;padding:10px;font-size:11px;margin:5px}
+#overlay{display:none;position:fixed;inset:0;z-index:10;background:#050914ed;align-items:center;justify-content:center;padding:15px}
+.modal{width:min(100%,430px);padding:22px 17px;border:3px solid #ffcf50;border-radius:12px;background:linear-gradient(145deg,#263b5a,#111a2c)}
 .modal h2{color:#ffe16b;font-size:25px}
 .modal p{font-size:13px;line-height:1.9;color:#e3eaff}
 .modal button{width:100%;margin-top:9px}
-.hidden{display:none!important}
-footer{padding:20px;color:#536681;font-size:10px}
-@media(max-width:420px){
- .stat{padding:8px 10px}
- .modes{grid-template-columns:1fr}
- .mode{padding:9px}
-}
+footer{padding:18px;color:#536681;font-size:10px}
+@media(max-width:420px){.modes{grid-template-columns:1fr}.mode{padding:9px}}
 </style>
 </head>
 <body>
 
 <header>
- <div class="logo">🐶 SAVE THE DOG</div>
- <div class="subtitle">FRANCESCO EDITION • ARCADE 2.0</div>
+<div class="logo">🐶 SAVE THE DOG</div>
+<div class="subtitle">FRANCESCO EDITION • ARCADE 2.0</div>
 </header>
 
 <div class="stats">
- <div class="stat">⭐ PUNTI<b id="score">0</b></div>
- <div class="stat">🏆 RECORD<b id="best">0</b></div>
- <div class="stat">🔥 LIVELLO<b id="level">1</b></div>
+<div class="stat">⭐ PUNTI<b id="score">0</b></div>
+<div class="stat">🏆 RECORD<b id="best">0</b></div>
+<div class="stat">🔥 LIVELLO<b id="level">1</b></div>
 </div>
 
 <div class="container">
- <canvas id="scene" width="960" height="540"></canvas>
+<canvas id="scene" width="960" height="540"></canvas>
 
- <div id="menu" class="menu">
-  <h2>⚡ SCEGLI LA TUA MISSIONE</h2>
-  <p>La Clio blu sta arrivando!<br>Francesco deve salvare il suo cane!</p>
-  <div class="modes">
-   <button class="mode selected" data-mode="classic">🎮 CLASSICA</button>
-   <button class="mode" data-mode="inferno">🔥 INFERNO</button>
-   <button class="mode" data-mode="survival">💀 SOPRAVVIVENZA</button>
-  </div>
-  <div class="settings">
-   <button class="small" id="soundToggle">🔊 AUDIO ON</button>
-  </div>
-  <button class="btn gold" id="start" style="width:100%">▶ INIZIA LA MISSIONE</button>
- </div>
+<div id="menu" class="menu">
+<h2>⚡ SCEGLI LA TUA MISSIONE</h2>
+<p>La Clio blu sta arrivando!<br>Francesco deve salvare il suo cane!</p>
+<div class="modes">
+<button class="mode selected" data-mode="classic">🎮 CLASSICA</button>
+<button class="mode" data-mode="inferno">🔥 INFERNO</button>
+<button class="mode" data-mode="survival">💀 SOPRAVVIVENZA</button>
+</div>
+<button class="small" id="soundToggle">🔊 AUDIO ON</button>
+<button class="btn gold" id="start" style="width:100%;margin-top:10px">▶ INIZIA LA MISSIONE</button>
+</div>
 
- <div id="gameUI" class="hidden">
-  <div class="hud">
-   <span id="phase">👀 PREPARATI</span>
-   <span id="clock">⏱ --</span>
-  </div>
-  <div class="bar"><div id="progress"></div></div>
-  <div class="message" id="message">La Clio si sta avvicinando...</div>
-  <div class="controls">
-   <button class="btn green" id="save">🐶 SALVA IL CANE!</button>
-   <button class="btn blue" id="pause">Ⅱ PAUSA</button>
-  </div>
- </div>
+<div id="gameUI">
+<div class="hud">
+<span id="phase">👀 PREPARATI</span>
+<span id="clock">⏱ --</span>
+</div>
+<div class="bar"><div id="progress"></div></div>
+<div class="message" id="message">La Clio si sta avvicinando...</div>
+<div class="controls">
+<button class="btn green" id="save">🐶 SALVA IL CANE!</button>
+<button class="btn blue" id="pause">Ⅱ PAUSA</button>
+</div>
+</div>
 </div>
 
 <div class="panel">
- <strong>📜 LE REGOLE DI FRANCESCO</strong><br>
- Salva il cane e guadagna punti!<br>
- Se fallisci, la Clio rompe il paraurti e devi offrire 10 pizze! 🍕<br>
- Ma attenzione: il padre può apparire con il 35% di probabilità! 👨
+<strong>📜 LE REGOLE DI FRANCESCO</strong><br>
+Salva il cane e guadagna punti!<br>
+Se fallisci, la Clio rompe il paraurti e devi offrire 10 pizze! 🍕<br>
+Ma attenzione: il padre può apparire con il 35% di probabilità! 👨
 </div>
 
 <div id="overlay">
- <div class="modal">
-  <h2 id="endTitle">GAME OVER</h2>
-  <p id="endText"></p>
-  <button class="btn gold" id="again">↻ RIPROVA</button>
-  <button class="btn blue" id="home">⌂ MENU PRINCIPALE</button>
- </div>
+<div class="modal">
+<h2 id="endTitle">GAME OVER</h2>
+<p id="endText"></p>
+<button class="btn gold" id="again">↻ RIPROVA</button>
+<button class="btn blue" id="home">⌂ MENU PRINCIPALE</button>
+</div>
 </div>
 
 <footer>SAVE THE DOG 2.0 • FRANCESCO ESPOSITO • PIXEL ARCADE</footer>
@@ -194,9 +121,11 @@ let best=Number(localStorage.getItem("francescoBest")||0);
 let soundOn=true,audio=null;
 let startTime=0,waitTime=0,deadline=0;
 let reactionDuration=1100;
-let carX=1040,roadOffset=0,cloudOffset=0,frame=0;
-let particles=[],rain=[],eventName="";
-let pauseAt=0,previousState="",lastRoundTime=0;
+let carX=1050,roadOffset=0,cloudOffset=0,frame=0;
+let particles=[];
+let eventName="";
+let pauseAt=0,previousState="";
+let roundTimeout=null;
 
 $("best").textContent=best;
 
@@ -205,22 +134,27 @@ function sound(freq=440,duration=.13,type="square"){
  try{
   audio=audio||new(window.AudioContext||window.webkitAudioContext)();
   if(audio.state==="suspended")audio.resume();
-  const o=audio.createOscillator(),g=audio.createGain();
-  o.type=type;o.frequency.value=freq;
+  const o=audio.createOscillator();
+  const g=audio.createGain();
+  o.type=type;
+  o.frequency.value=freq;
   g.gain.setValueAtTime(.07,audio.currentTime);
   g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
-  o.connect(g);g.connect(audio.destination);
-  o.start();o.stop(audio.currentTime+duration);
+  o.connect(g);
+  g.connect(audio.destination);
+  o.start();
+  o.stop(audio.currentTime+duration);
  }catch(e){}
 }
 
-function rect(x,y,w,h,c){
- ctx.fillStyle=c;
+function rect(x,y,w,h,color){
+ ctx.fillStyle=color;
  ctx.fillRect(Math.round(x),Math.round(y),w,h);
 }
 function label(t,x,y,size,color="#fff",align="left"){
  ctx.font="bold "+size+"px monospace";
- ctx.textAlign=align;ctx.fillStyle=color;
+ ctx.textAlign=align;
+ ctx.fillStyle=color;
  ctx.fillText(t,x,y);
 }
 
@@ -229,48 +163,36 @@ function cloud(x,y){
  rect(x+20,y-15,45,22,"#fff");
  rect(x+58,y-8,30,18,"#fff");
 }
-
 function tree(x,y,s=1){
  rect(x+20*s,y+50*s,17*s,70*s,"#70472f");
  rect(x,y+15*s,58*s,48*s,"#236b3d");
  rect(x+9*s,y,40*s,50*s,"#39964c");
  rect(x+20*s,y-10*s,20*s,22*s,"#56b85b");
- rect(x+8*s,y+30*s,9*s,9*s,"#83d96b");
 }
-
 function building(x,y,color){
  rect(x,y,150,155,color);
  rect(x-7,y-18,164,22,"#b95444");
  rect(x+15,y+35,40,42,"#9ce2ef");
  rect(x+95,y+35,40,42,"#9ce2ef");
  rect(x+60,y+95,35,60,"#67452f");
- rect(x+30,y+45,7,7,"#fff5c0");
 }
 
 function background(){
- let night=mode==="inferno" && level>4;
- let sky=night?"#26375e":"#87d2f1";
- rect(0,0,W,H,sky);
+ let night=mode==="inferno"&&level>4;
+ rect(0,0,W,H,night?"#26375e":"#87d2f1");
 
  if(night){
   rect(790,50,48,48,"#fff1b1");
-  for(let i=0;i<30;i++){
-   let x=(i*97)%W,y=(i*43)%220;
-   rect(x,y,3,3,"#fff4c7");
-  }
+  for(let i=0;i<30;i++)rect((i*97)%W,(i*43)%220,3,3,"#fff4c7");
  }else{
   rect(790,55,70,70,"#ffe58b");
-  cloud(100+(cloudOffset%1100),80);
-  cloud(470+((cloudOffset*.7)%1100),135);
+  cloud((100+cloudOffset)%1100-100,80);
+  cloud((470+cloudOffset*.7)%1100-100,135);
  }
 
  rect(0,220,W,85,"#6caa98");
- rect(0,255,240,50,"#5f9b88");
- rect(320,225,300,80,"#639985");
-
  building(30,180,"#dfb28b");
  building(780,180,"#e4c28d");
-
  rect(0,300,W,240,"#59a94c");
  rect(0,315,W,15,"#77c45a");
 
@@ -282,7 +204,6 @@ function background(){
 
  rect(0,385,W,25,"#d1c5a1");
  for(let x=0;x<W;x+=70)rect(x,385,35,5,"#f6ebca");
-
  rect(0,410,W,130,"#343c4b");
  rect(0,410,W,8,"#e9e4ce");
  rect(0,525,W,8,"#e9e4ce");
@@ -332,9 +253,7 @@ function drawDog(){
  rect(x+20,y+62+step,18,6,"#5d3928");
  rect(x+57,y+62-step,18,6,"#5d3928");
 
- if(state==="countdown"||state==="reaction"){
-  label("BAU!",x+20,y-23,17,"#fff");
- }
+ if(state==="countdown"||state==="reaction")label("BAU!",x+20,y-23,17);
  if(state==="saved")label("♥",x+22,y-30,24,"#ffed70");
 }
 
@@ -359,6 +278,9 @@ function drawFrancesco(){
 
 function drawCar(){
  let x=carX,y=356;
+
+ // La parte anteriore della Clio è a sinistra:
+ // la macchina viaggia verso il cane.
  rect(x+20,y+115,240,12,"#202631");
  rect(x+5,y+47,245,69,"#0750b7");
  rect(x+42,y+20,157,37,"#176ddc");
@@ -366,10 +288,12 @@ function drawCar(){
  rect(x+119,y+24,67,28,"#9fe4f3");
  rect(x+16,y+53,215,5,"#5aa5ff");
  rect(x+45,y+64,120,4,"#3989f2");
- rect(x+238,y+85,18,25,"#a8c7e6");
- rect(x+7,y+85,12,20,"#17417a");
- rect(x+244,y+62,12,18,"#fff2a0");
- rect(x+5,y+62,10,15,"#ff6464");
+
+ // Paraurti anteriore e fari a sinistra
+ rect(x,y+85,18,25,"#a8c7e6");
+ rect(x+238,y+85,18,25,"#17417a");
+ rect(x+4,y+62,12,18,"#fff2a0");
+ rect(x+4,y+92,12,12,"#ff6464");
 
  for(let xx of [x+40,x+182]){
   rect(xx,y+98,48,40,"#10141d");
@@ -381,14 +305,13 @@ function drawCar(){
  label("CLIO",x+211,y+99,8,"#1b3151","center");
 
  if(state==="accident"||state==="father"){
-  rect(x+240,y+108,25,9,"#e1dce0");
-  rect(x+248,y+118,12,8,"#111");
+  rect(x,y+108,25,9,"#e1dce0");
+  rect(x+4,y+118,12,8,"#111");
  }
 }
 
 function drawFather(){
- // Padre che entra da destra
- let x=700+Math.sin(frame*.04)*4,y=280;
+ let x=700,y=280;
  rect(x+15,y+5,50,48,"#d49a70");
  rect(x+9,y,58,16,"#51402d");
  rect(x+12,y+32,55,8,"#59402d");
@@ -412,7 +335,6 @@ function particlesBurst(x,y,color,count=30){
   });
  }
 }
-
 function drawParticles(){
  for(let i=particles.length-1;i>=0;i--){
   let p=particles[i];
@@ -436,7 +358,8 @@ function drawScene(){
  if(state==="saved")label("CANE SALVATO!",480,145,32,"#fff","center");
 
  if(state==="menu"){
-  ctx.fillStyle="#071225aa";ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#071225aa";
+  ctx.fillRect(0,0,W,H);
   label("FRANCESCO'S MISSION",480,165,29,"#ffe36b","center");
   label("SALVA IL CANE!",480,220,34,"#fff","center");
   label("ATTENZIONE ALLA CLIO BLU",480,265,17,"#c5e8ff","center");
@@ -446,26 +369,24 @@ function drawScene(){
 function now(){return performance.now()}
 
 function nextRound(){
- if(state==="accident"||state==="father"||state==="menu")return;
+ if(roundTimeout){
+  clearTimeout(roundTimeout);
+  roundTimeout=null;
+ }
+ if(state==="menu"||state==="paused")return;
 
  state="countdown";
- carX=1040;
+ carX=1050;
  eventName="";
- const roll=Math.random();
 
+ const roll=Math.random();
  if(roll<.12){
   eventName="PIOGGIA";
-  waitTime=(Math.random()*2.3+1.3)*1000;
-  $("message").textContent="🌧️ PIOGGIA! La strada è scivolosa!";
  }else if(roll<.20){
   eventName="BONUS";
-  waitTime=(Math.random()*3+1.5)*1000;
-  $("message").textContent="⭐ MOMENTO BONUS! Preparati!";
- }else{
-  waitTime=(Math.random()*3.7+1.5)*1000;
-  $("message").textContent="La Clio si avvicina... osserva!";
  }
 
+ waitTime=(Math.random()*3.7+1.5)*1000;
  if(mode==="inferno")waitTime*=.65;
  if(mode==="survival")waitTime*=.8;
  if(level>5)waitTime=Math.max(900,waitTime*.85);
@@ -478,63 +399,87 @@ function nextRound(){
  $("clock").textContent="⏱ --";
  $("progress").style.width="0%";
  $("save").style.display="none";
+
+ if(eventName==="PIOGGIA"){
+  $("message").textContent="🌧️ PIOGGIA! La strada è scivolosa!";
+ }else if(eventName==="BONUS"){
+  $("message").textContent="⭐ MOMENTO BONUS! Preparati!";
+ }else{
+  $("message").textContent="La Clio blu si sta avvicinando...";
+ }
 }
 
 function startGame(){
- score=0;level=1;carX=1040;roadOffset=0;particles=[];
+ if(roundTimeout)clearTimeout(roundTimeout);
+ roundTimeout=null;
+ score=0;level=1;carX=1050;
+ roadOffset=0;particles=[];
  $("score").textContent=0;
  $("level").textContent=1;
- $("menu").classList.add("hidden");
- $("gameUI").classList.remove("hidden");
+ $("menu").style.display="none";
+ $("gameUI").style.display="block";
  $("overlay").style.display="none";
+ $("pause").textContent="Ⅱ PAUSA";
  sound(600,.15);
+ state="ready";
  nextRound();
 }
 
 function saveDog(){
  if(state!=="reaction")return;
+
  state="saved";
  $("save").style.display="none";
+
  const points=eventName==="BONUS"?20*level:10*level;
  score+=points;
  level++;
+
  $("score").textContent=score;
  $("level").textContent=level;
  $("phase").textContent="🐶 SALVATAGGIO RIUSCITO";
  $("clock").textContent="✓";
  $("progress").style.width="100%";
  $("message").innerHTML="🎉 CANE SALVATO! +"+points+" PUNTI!";
+
  particlesBurst(230,390,"#ffe16b",35);
  particlesBurst(270,390,"#4effa0",20);
  sound(900,.2);
- setTimeout(()=>{
-  if(state==="saved")nextRound();
- },1300);
-}
-
-function fail(){
- if(state!=="reaction")return;
- state="accident";
- $("save").style.display="none";
- $("phase").textContent="💥 INCIDENTE!";
- $("clock").textContent="X";
- $("message").textContent="💥 LA CLIO HA ROTTO IL PARAURTI!";
- particlesBurst(420,430,"#ffbd44",45);
- particlesBurst(450,410,"#ff5555",25);
- sound(100,.6,"sawtooth");
- carX=270;
- setTimeout(showPenalty,1200);
-}
-
-function showPenalty(){
- const father=Math.random()<.35;
- state=father?"father":"accident";
 
  if(score>best){
   best=score;
   localStorage.setItem("francescoBest",best);
   $("best").textContent=best;
  }
+
+ roundTimeout=setTimeout(()=>{
+  if(state==="saved")nextRound();
+ },1300);
+}
+
+function fail(){
+ if(state!=="reaction")return;
+
+ state="accident";
+ $("save").style.display="none";
+ $("phase").textContent="💥 INCIDENTE!";
+ $("clock").textContent="X";
+ $("message").textContent="💥 LA CLIO HA ROTTO IL PARAURTI!";
+
+ carX=210;
+ particlesBurst(420,430,"#ffbd44",45);
+ particlesBurst(450,410,"#ff5555",25);
+ sound(100,.6,"sawtooth");
+
+ roundTimeout=setTimeout(showPenalty,1100);
+}
+
+function showPenalty(){
+ if(state!=="accident")return;
+
+ // Probabilità ESATTA del 35%
+ const father=Math.random()<0.35;
+ state=father?"father":"accident";
 
  $("endTitle").textContent=father?
   "👨 È ARRIVATO PAPÀ!":"🍕 MULTA PIZZA!";
@@ -551,15 +496,22 @@ function showPenalty(){
 
  $("endText").innerHTML+="<br><br>🏆 PUNTEGGIO: "+score+
   "<br>🔥 LIVELLO: "+level;
+
  $("overlay").style.display="flex";
  sound(father?600:180,.4);
 }
 
 function update(){
  if(state==="countdown"){
-  let left=(startTime+waitTime-now())/1000;
+  const elapsed=now()-startTime;
+  const left=(startTime+waitTime-now())/1000;
+  const pct=Math.min(1,elapsed/waitTime);
+
+  // La macchina entra da destra e si avvicina al cane.
+  carX=1050-pct*680;
+
   $("clock").textContent="⏱ "+Math.max(0,left).toFixed(1)+"s";
-  $("progress").style.width=(Math.max(0,1-left/(waitTime/1000))*100)+"%";
+  $("progress").style.width=(pct*100)+"%";
 
   if(left<=0){
    state="reaction";
@@ -570,12 +522,17 @@ function update(){
    $("clock").textContent="⚡ ORA!";
    sound(950,.15);
   }
- }else if(state==="reaction"){
-  let left=deadline-now();
-  let pct=Math.max(0,left/reactionDuration);
+ }
+ else if(state==="reaction"){
+  const left=deadline-now();
+  const pct=Math.max(0,left/reactionDuration);
+
   $("progress").style.width=(pct*100)+"%";
   $("clock").textContent="⚡ "+Math.max(0,left/1000).toFixed(2)+"s";
-  carX=1040-(1-pct)*780;
+
+  // Accelerazione finale verso il cane.
+  carX=370-(1-pct)*160;
+
   if(left<=0)fail();
  }
 
@@ -593,13 +550,15 @@ function loop(){
 }
 
 function home(){
+ if(roundTimeout)clearTimeout(roundTimeout);
+ roundTimeout=null;
  state="menu";
  $("overlay").style.display="none";
- $("gameUI").classList.add("hidden");
- $("menu").classList.remove("hidden");
- $("start").style.display="block";
- carX=1040;particles=[];
- $("score").textContent=score;
+ $("gameUI").style.display="none";
+ $("menu").style.display="block";
+ $("save").style.display="none";
+ carX=1050;
+ particles=[];
 }
 
 document.querySelectorAll(".mode").forEach(btn=>{
